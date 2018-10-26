@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.MainActivity">
+
+    <com.github.teocci.android.pptopus.views.CircleButtonView
+        android:id="@+id/circleButton"
+        android:layout_width="172dp"
+        android:layout_height="172dp"
+        android:src="@mipmap/ic_main_btn"
+        app:cb_color="#99CC00"
+        app:cb_pressedRingWidth="8dip"/>
+
+</android.support.constraint.ConstraintLayout>

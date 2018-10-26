@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">Android-PPTOpus</string>
+
+    <string name="menu_item_options">Options</string>
+    <string name="menu_item_quit">Quit</string>
+
+    <string name="device_name_title">Device name</string>
+    <string name="audio_setting_title">Sound streaming</string>
+    <string name="audio_streaming_summary">Enable/Disable audio streaming</string>
+    <string name="audio_encoder_title">Audio encoder</string>
+    <string name="audio_encoder_summary">AAC requires at least ICS</string>
+
+    <string name="rtsp_server_title">RTSP server</string>
+    <string name="rtsp_enabled_title">Enabled</string>
+    <string name="rtsp_enabled_summary">Useful to use Smart Cam directly with VLC</string>
+    <string name="rtsp_port_title">RTSP server port</string>
+    <string name="rtsp_port_summary">Port used by the RTSP server</string>
+
+    <string name="more_option_title">More options</string>
+    <string name="notification_config_title">Notification</string>
+    <string name="notification_config_summary">Enable/Disable the notification</string>
+    <string name="open_source_license_title">Open Source License</string>
+
+    <string name="notification_title">Smart Audio</string>
+    <string name="notification_content">Smart Audio is running</string>
+
+    <string name="channel_name">Notification Channel RTSP</string>
+    <string name="channel_description">This is a notification channel at default level, sound, and vibration are active.</string>
+
+    <string name="permission_warning">To continue, please Microphone, Read Write External Storage And Phone permission for this application.</string>
+    <string name="dismiss">Dismiss</string>
+    <string name="empty_status">:</string>
+
+    <string name="push_to_talk">Push to Talk</string>
+    <string name="push_to_talk_active">Talking</string>
+
+</resources>
