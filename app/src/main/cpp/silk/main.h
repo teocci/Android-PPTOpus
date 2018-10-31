@@ -352,7 +352,7 @@ opus_int32 silk_NLSF_encode(                                    /* O    Returns 
 /* Compute quantization errors for an LPC_order element input vector for a VQ codebook */
 void silk_NLSF_VQ(
         opus_int32 err_Q26[],                      /* O    Quantization errors [K]                     */
-        const opus_int16 in_Q15[],                       /* I    Input vectors to be quantized [LPC_order]   */
+        const opus_int16 in_Q15[],                       /* I    WSRecorder vectors to be quantized [LPC_order]   */
         const opus_uint8 pCB_Q8[],                       /* I    Codebook vectors [K*LPC_order]              */
         const opus_int K,                              /* I    Number of codebook vectors                  */
         const opus_int LPC_order                       /* I    Number of LPCs                              */
@@ -361,7 +361,7 @@ void silk_NLSF_VQ(
 /* Delayed-decision quantizer for NLSF residuals */
 opus_int32 silk_NLSF_del_dec_quant(                             /* O    Returns RD value in Q25                     */
         opus_int8 indices[],                      /* O    Quantization indices [ order ]              */
-        const opus_int16 x_Q10[],                        /* I    Input [ order ]                             */
+        const opus_int16 x_Q10[],                        /* I    WSRecorder [ order ]                             */
         const opus_int16 w_Q5[],                         /* I    Weights [ order ]                           */
         const opus_uint8 pred_coef_Q8[],                 /* I    Backward predictor coefs [ order ]          */
         const opus_int16 ec_ix[],                        /* I    Indices to entropy coding tables [ order ]  */

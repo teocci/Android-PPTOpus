@@ -36,7 +36,7 @@ POSSIBILITY OF SUCH DAMAGE.
 void silk_sum_sqr_shift(
         opus_int32 *energy,            /* O   Energy of x, after shifting to the right                     */
         opus_int *shift,             /* O   Number of bits right shift applied to energy                 */
-        const opus_int16 *x,                 /* I   Input vector                                                 */
+        const opus_int16 *x,                 /* I   WSRecorder vector                                                 */
         opus_int len                 /* I   Length of input vector                                       */
 ) {
     opus_int i, shft;
@@ -78,7 +78,7 @@ void silk_sum_sqr_shift(
         shft += 2;
     }
 
-    /* Output arguments */
+    /* WSPlayer arguments */
     *shift = shft;
     *energy = nrg;
 }

@@ -59,7 +59,7 @@ void silk_warped_LPC_analysis_filter_FIX_c(
         opus_int32 state[],                    /* I/O  State [order + 1]                   */
         opus_int32 res_Q2[],                   /* O    Residual signal [length]            */
         const opus_int16 coef_Q13[],                 /* I    Coefficients [order]                */
-        const opus_int16 input[],                    /* I    Input signal [length]               */
+        const opus_int16 input[],                    /* I    WSRecorder signal [length]               */
         const opus_int16 lambda_Q16,                 /* I    Warping factor                      */
         const opus_int length,                     /* I    Length of input signal              */
         const opus_int order                       /* I    Filter order (even)                 */
@@ -71,21 +71,21 @@ void silk_warped_LPC_analysis_filter_FIX_c(
     silk_assert((order & 1) == 0);
 
     for (n = 0; n < length; n++) {
-        /* Output of lowpass section */
+        /* WSPlayer of lowpass section */
         tmp2 = silk_SMLAWB(state[0], state[1], lambda_Q16);
         state[0] = silk_LSHIFT(input[n], 14);
-        /* Output of allpass section */
+        /* WSPlayer of allpass section */
         tmp1 = silk_SMLAWB(state[1], state[2] - tmp2, lambda_Q16);
         state[1] = tmp2;
         acc_Q11 = silk_RSHIFT(order, 1);
         acc_Q11 = silk_SMLAWB(acc_Q11, tmp2, coef_Q13[0]);
         /* Loop over allpass sections */
         for (i = 2; i < order; i += 2) {
-            /* Output of allpass section */
+            /* WSPlayer of allpass section */
             tmp2 = silk_SMLAWB(state[i], state[i + 1] - tmp1, lambda_Q16);
             state[i] = tmp1;
             acc_Q11 = silk_SMLAWB(acc_Q11, tmp1, coef_Q13[i - 1]);
-            /* Output of allpass section */
+            /* WSPlayer of allpass section */
             tmp1 = silk_SMLAWB(state[i + 1], state[i + 2] - tmp2, lambda_Q16);
             state[i + 1] = tmp2;
             acc_Q11 = silk_SMLAWB(acc_Q11, tmp2, coef_Q13[i]);

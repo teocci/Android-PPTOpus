@@ -56,8 +56,8 @@ extern "C"
 */
 opus_int silk_resampler_init(
         silk_resampler_state_struct *S,                 /* I/O  Resampler state                                             */
-        opus_int32 Fs_Hz_in,           /* I    Input sampling rate (Hz)                                    */
-        opus_int32 Fs_Hz_out,          /* I    Output sampling rate (Hz)                                   */
+        opus_int32 Fs_Hz_in,           /* I    WSRecorder sampling rate (Hz)                                    */
+        opus_int32 Fs_Hz_out,          /* I    WSPlayer sampling rate (Hz)                                   */
         opus_int forEnc              /* I    If 1: encoder; if 0: decoder                                */
 );
 
@@ -66,8 +66,8 @@ opus_int silk_resampler_init(
  */
 opus_int silk_resampler(
         silk_resampler_state_struct *S,                 /* I/O  Resampler state                                             */
-        opus_int16 out[],              /* O    Output signal                                               */
-        const opus_int16 in[],               /* I    Input signal                                                */
+        opus_int16 out[],              /* O    WSPlayer signal                                               */
+        const opus_int16 in[],               /* I    WSRecorder signal                                                */
         opus_int32 inLen               /* I    Number of input samples                                     */
 );
 
@@ -76,8 +76,8 @@ opus_int silk_resampler(
 */
 void silk_resampler_down2(
         opus_int32 *S,                 /* I/O  State vector [ 2 ]                                          */
-        opus_int16 *out,               /* O    Output signal [ len ]                                       */
-        const opus_int16 *in,                /* I    Input signal [ floor(len/2) ]                               */
+        opus_int16 *out,               /* O    WSPlayer signal [ len ]                                       */
+        const opus_int16 *in,                /* I    WSRecorder signal [ floor(len/2) ]                               */
         opus_int32 inLen               /* I    Number of input samples                                     */
 );
 
@@ -86,8 +86,8 @@ void silk_resampler_down2(
 */
 void silk_resampler_down2_3(
         opus_int32 *S,                 /* I/O  State vector [ 6 ]                                          */
-        opus_int16 *out,               /* O    Output signal [ floor(2*inLen/3) ]                          */
-        const opus_int16 *in,                /* I    Input signal [ inLen ]                                      */
+        opus_int16 *out,               /* O    WSPlayer signal [ floor(2*inLen/3) ]                          */
+        const opus_int16 *in,                /* I    WSRecorder signal [ inLen ]                                      */
         opus_int32 inLen               /* I    Number of input samples                                     */
 );
 
@@ -108,8 +108,8 @@ void silk_biquad_alt(
 
 /* Variable order MA prediction error filter. */
 void silk_LPC_analysis_filter(
-        opus_int16 *out,               /* O    Output signal                                               */
-        const opus_int16 *in,                /* I    Input signal                                                */
+        opus_int16 *out,               /* O    WSPlayer signal                                               */
+        const opus_int16 *in,                /* I    WSRecorder signal                                                */
         const opus_int16 *B,                 /* I    MA prediction coefficients, Q12 [order]                     */
         const opus_int32 len,                /* I    Signal length                                               */
         const opus_int32 d,                  /* I    Filter order                                                */
@@ -145,7 +145,7 @@ opus_int32 silk_LPC_inverse_pred_gain_Q24(          /* O    Returns inverse pred
 
 /* Split signal in two decimated bands using first-order allpass filters */
 void silk_ana_filt_bank_1(
-        const opus_int16 *in,                /* I    Input signal [N]                                            */
+        const opus_int16 *in,                /* I    WSRecorder signal [N]                                            */
         opus_int32 *S,                 /* I/O  State vector [2]                                            */
         opus_int16 *outL,              /* O    Low band [N/2]                                              */
         opus_int16 *outH,              /* O    High band [N/2]                                             */
@@ -178,7 +178,7 @@ opus_int32 silk_log2lin(
 void silk_sum_sqr_shift(
         opus_int32 *energy,            /* O   Energy of x, after shifting to the right                     */
         opus_int *shift,             /* O   Number of bits right shift applied to energy                 */
-        const opus_int16 *x,                 /* I   Input vector                                                 */
+        const opus_int16 *x,                 /* I   WSRecorder vector                                                 */
         opus_int len                 /* I   Length of input vector                                       */
 );
 
@@ -230,7 +230,7 @@ void silk_apply_sine_window(
 void silk_autocorr(
         opus_int32 *results,           /* O    Result (length correlationCount)                            */
         opus_int *scale,             /* O    Scaling of the correlation vector                           */
-        const opus_int16 *inputData,         /* I    Input data to correlate                                     */
+        const opus_int16 *inputData,         /* I    WSRecorder data to correlate                                     */
         const opus_int inputDataSize,      /* I    Length of input                                             */
         const opus_int correlationCount,   /* I    Number of correlation taps to compute                       */
         int arch                /* I    Run-time architecture                                       */
@@ -304,7 +304,7 @@ void silk_NLSF_stabilize(
 void silk_NLSF_VQ_weights_laroia(
         opus_int16 *pNLSFW_Q_OUT,      /* O     Pointer to input vector weights [D]                        */
         const opus_int16 *pNLSF_Q15,         /* I     Pointer to input vector         [D]                        */
-        const opus_int D                   /* I     Input vector dimension (even)                              */
+        const opus_int D                   /* I     WSRecorder vector dimension (even)                              */
 );
 
 /* Compute reflection coefficients from input signal */
@@ -312,9 +312,9 @@ void silk_burg_modified_c(
         opus_int32 *res_nrg,           /* O    Residual energy                                             */
         opus_int *res_nrg_Q,         /* O    Residual energy Q value                                     */
         opus_int32 A_Q16[],            /* O    Prediction coefficients (length order)                      */
-        const opus_int16 x[],                /* I    Input signal, length: nb_subfr * ( D + subfr_length )       */
+        const opus_int16 x[],                /* I    WSRecorder signal, length: nb_subfr * ( D + subfr_length )       */
         const opus_int32 minInvGain_Q30,     /* I    Inverse of max prediction gain                              */
-        const opus_int subfr_length,       /* I    Input signal subframe length (incl. D preceding samples)    */
+        const opus_int subfr_length,       /* I    WSRecorder signal subframe length (incl. D preceding samples)    */
         const opus_int nb_subfr,           /* I    Number of subframes stacked in x                            */
         const opus_int D,                  /* I    Order                                                       */
         int arch                /* I    Run-time architecture                                       */
@@ -367,7 +367,7 @@ opus_int64 silk_inner_prod16_aligned_64_c(
 /********************************************************************/
 
 /* Rotate a32 right by 'rot' bits. Negative rot values result in rotating
-   left. Output is 32bit int.
+   left. WSPlayer is 32bit int.
    Note: contemporary compilers recognize the C expression below and
    compile it into a 'ror' instruction if available. No need for OPUS_INLINE ASM! */
 static OPUS_INLINE opus_int32 silk_ROR32(opus_int32 a32, opus_int rot) {

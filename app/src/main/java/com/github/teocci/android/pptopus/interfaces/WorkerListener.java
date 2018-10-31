@@ -8,7 +8,7 @@ package com.github.teocci.android.pptopus.interfaces;
 public interface WorkerListener
 {
     /**
-     * After a Connection Succeed
+     * After a UDPConnection Succeed
      */
     void onWorkerConnected();
 

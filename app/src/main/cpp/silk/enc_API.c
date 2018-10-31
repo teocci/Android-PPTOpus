@@ -257,7 +257,7 @@ opus_int silk_Encode(                                   /* O    Returns error co
     silk_assert(encControl->nChannelsInternal == 1 ||
                 psEnc->state_Fxx[0].sCmn.fs_kHz == psEnc->state_Fxx[1].sCmn.fs_kHz);
 
-    /* Input buffering/resampling and encoding */
+    /* WSRecorder buffering/resampling and encoding */
     nSamplesToBufferMax =
             10 * nBlocksOf10ms * psEnc->state_Fxx[0].sCmn.fs_kHz;
     nSamplesFromInputMax =

@@ -89,7 +89,7 @@ silk_float silk_residual_energy_covar_FLP(                              /* O    
 /* of preceding samples                                                                 */
 void silk_residual_energy_FLP(
         silk_float nrgs[MAX_NB_SUBFR],               /* O    Residual energy per subframe                */
-        const silk_float x[],                                /* I    Input signal                                */
+        const silk_float x[],                                /* I    WSRecorder signal                                */
         silk_float a[2][MAX_LPC_ORDER],            /* I    AR coefs for each frame half                */
         const silk_float gains[],                            /* I    Quantization gains                          */
         const opus_int subfr_length,                       /* I    Subframe length                             */

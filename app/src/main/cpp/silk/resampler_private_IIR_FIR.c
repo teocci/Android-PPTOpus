@@ -64,8 +64,8 @@ static OPUS_INLINE opus_int16 *silk_resampler_private_IIR_FIR_INTERPOL(
 /* Upsample using a combination of allpass-based 2x upsampling and FIR interpolation */
 void silk_resampler_private_IIR_FIR(
         void *SS,            /* I/O  Resampler state             */
-        opus_int16 out[],          /* O    Output signal               */
-        const opus_int16 in[],           /* I    Input signal                */
+        opus_int16 out[],          /* O    WSPlayer signal               */
+        const opus_int16 in[],           /* I    WSRecorder signal                */
         opus_int32 inLen           /* I    Number of input samples     */
 ) {
     silk_resampler_state_struct *S = (silk_resampler_state_struct *) SS;

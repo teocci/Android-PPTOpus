@@ -220,7 +220,7 @@ typedef struct {
 
     int arch;
 
-    /* Input/output buffering */
+    /* WSRecorder/output buffering */
     opus_int16 inputBuf[MAX_FRAME_LENGTH +
                         2];  /* Buffer containing input signal                                   */
     opus_int inputBufIx;

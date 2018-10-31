@@ -34,7 +34,7 @@ POSSIBILITY OF SUCH DAMAGE.
 /* Delayed-decision quantizer for NLSF residuals */
 opus_int32 silk_NLSF_del_dec_quant(                             /* O    Returns RD value in Q25                     */
         opus_int8 indices[],                      /* O    Quantization indices [ order ]              */
-        const opus_int16 x_Q10[],                        /* I    Input [ order ]                             */
+        const opus_int16 x_Q10[],                        /* I    WSRecorder [ order ]                             */
         const opus_int16 w_Q5[],                         /* I    Weights [ order ]                           */
         const opus_uint8 pred_coef_Q8[],                 /* I    Backward predictor coefs [ order ]          */
         const opus_int16 ec_ix[],                        /* I    Indices to entropy coding tables [ order ]  */

@@ -226,8 +226,8 @@ opus_val32 frac_div32(opus_val32 a, opus_val32 b);
 #define M3 -11943
 #define M4 4936
 
-/* Atan approximation using a 4th order polynomial. Input is in Q15 format
-   and normalized by pi/4. Output is in Q15 format */
+/* Atan approximation using a 4th order polynomial. WSRecorder is in Q15 format
+   and normalized by pi/4. WSPlayer is in Q15 format */
 static OPUS_INLINE opus_val16 celt_atan01(opus_val16 x) {
     return MULT16_16_P15(x, ADD32(M1, MULT16_16_P15(x, ADD32(M2, MULT16_16_P15(x, ADD32(M3,
                                                                                         MULT16_16_P15(

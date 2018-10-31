@@ -36,7 +36,7 @@ POSSIBILITY OF SUCH DAMAGE.
 void silk_find_LPC_FIX(
         silk_encoder_state *psEncC,                                /* I/O  Encoder state                                                               */
         opus_int16 NLSF_Q15[],                             /* O    NLSFs                                                                       */
-        const opus_int16 x[],                                    /* I    Input signal                                                                */
+        const opus_int16 x[],                                    /* I    WSRecorder signal                                                                */
         const opus_int32 minInvGain_Q30                          /* I    Inverse of max prediction gain                                              */
 ) {
     opus_int k, subfr_length;

@@ -101,7 +101,7 @@ void silk_warped_LPC_analysis_filter_FIX_c(
         opus_int32 state[],                    /* I/O  State [order + 1]                   */
         opus_int32 res_Q2[],                   /* O    Residual signal [length]            */
         const opus_int16 coef_Q13[],                 /* I    Coefficients [order]                */
-        const opus_int16 input[],                    /* I    Input signal [length]               */
+        const opus_int16 input[],                    /* I    WSRecorder signal [length]               */
         const opus_int16 lambda_Q16,                 /* I    Warping factor                      */
         const opus_int length,                     /* I    Length of input signal              */
         const opus_int order                       /* I    Filter order (even)                 */
@@ -116,7 +116,7 @@ void silk_noise_shape_analysis_FIX(
         silk_encoder_state_FIX *psEnc,                                 /* I/O  Encoder state FIX                                                           */
         silk_encoder_control_FIX *psEncCtrl,                             /* I/O  Encoder control FIX                                                         */
         const opus_int16 *pitch_res,                             /* I    LPC residual from pitch analysis                                            */
-        const opus_int16 *x,                                     /* I    Input signal [ frame_length + la_shape ]                                    */
+        const opus_int16 *x,                                     /* I    WSRecorder signal [ frame_length + la_shape ]                                    */
         int arch                                   /* I    Run-time architecture                                                       */
 );
 
@@ -124,7 +124,7 @@ void silk_noise_shape_analysis_FIX(
 void silk_warped_autocorrelation_FIX(
         opus_int32 *corr,                                  /* O    Result [order + 1]                                                          */
         opus_int *scale,                                 /* O    Scaling of the correlation vector                                           */
-        const opus_int16 *input,                                 /* I    Input data to correlate                                                     */
+        const opus_int16 *input,                                 /* I    WSRecorder data to correlate                                                     */
         const opus_int warping_Q16,                            /* I    Warping coefficient                                                         */
         const opus_int length,                                 /* I    Length of input                                                             */
         const opus_int order                                   /* I    Correlation order (even)                                                    */
@@ -162,7 +162,7 @@ void silk_find_pred_coefs_FIX(
 void silk_find_LPC_FIX(
         silk_encoder_state *psEncC,                                /* I/O  Encoder state                                                               */
         opus_int16 NLSF_Q15[],                             /* O    NLSFs                                                                       */
-        const opus_int16 x[],                                    /* I    Input signal                                                                */
+        const opus_int16 x[],                                    /* I    WSRecorder signal                                                                */
         const opus_int32 minInvGain_Q30                          /* I    Inverse of max prediction gain                                              */
 );
 
@@ -200,7 +200,7 @@ void silk_LTP_analysis_filter_FIX(
 void silk_residual_energy_FIX(
         opus_int32 nrgs[MAX_NB_SUBFR],                   /* O    Residual energy per subframe                                                */
         opus_int nrgsQ[MAX_NB_SUBFR],                  /* O    Q value per subframe                                                        */
-        const opus_int16 x[],                                    /* I    Input signal                                                                */
+        const opus_int16 x[],                                    /* I    WSRecorder signal                                                                */
         opus_int16 a_Q12[2][MAX_LPC_ORDER],            /* I    AR coefs for each frame half                                                */
         const opus_int32 gains[MAX_NB_SUBFR],                  /* I    Quantization gains                                                          */
         const opus_int subfr_length,                           /* I    Subframe length                                                             */

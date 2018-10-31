@@ -144,8 +144,8 @@ static OPUS_INLINE opus_int16 *silk_resampler_private_down_FIR_INTERPOL(
 /* Resample with a 2nd order AR filter followed by FIR interpolation */
 void silk_resampler_private_down_FIR(
         void *SS,            /* I/O  Resampler state             */
-        opus_int16 out[],          /* O    Output signal               */
-        const opus_int16 in[],           /* I    Input signal                */
+        opus_int16 out[],          /* O    WSPlayer signal               */
+        const opus_int16 in[],           /* I    WSRecorder signal                */
         opus_int32 inLen           /* I    Number of input samples     */
 ) {
     silk_resampler_state_struct *S = (silk_resampler_state_struct *) SS;

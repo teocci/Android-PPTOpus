@@ -2,13 +2,14 @@ package com.github.teocci.android.pptopus.audio;
 
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
 
-public class Connection
+public class UDPConnection
 {
     public static DatagramSocket socket;
 
     public static InetAddress target;
+
+    public static int port;
 
     public static long sent = 0;
 
@@ -17,7 +18,13 @@ public class Connection
         sent = System.currentTimeMillis() + Configuration.KEEP_ALIVE;
     }
 
-    public static void setTarget(InetAddress address) {
+    public static void setTarget(InetAddress address)
+    {
         target = address;
+    }
+
+    public static void setPort(int targetPort)
+    {
+        port = targetPort;
     }
 }

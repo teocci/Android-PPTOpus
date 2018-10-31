@@ -46,7 +46,7 @@ POSSIBILITY OF SUCH DAMAGE.
 void silk_warped_autocorrelation_FIX(
         opus_int32 *corr,                                  /* O    Result [order + 1]                                                          */
         opus_int *scale,                                 /* O    Scaling of the correlation vector                                           */
-        const opus_int16 *input,                                 /* I    Input data to correlate                                                     */
+        const opus_int16 *input,                                 /* I    WSRecorder data to correlate                                                     */
         const opus_int warping_Q16,                            /* I    Warping coefficient                                                         */
         const opus_int length,                                 /* I    Length of input                                                             */
         const opus_int order                                   /* I    Correlation order (even)                                                    */
@@ -77,7 +77,7 @@ void silk_warped_autocorrelation_FIX(
 
         /* Loop over allpass sections */
         for (i = 0; i < order; i += 2) {
-            /* Output of allpass section */
+            /* WSPlayer of allpass section */
             tmp2_QS = silk_SMLAWB(state_QS[i], state_QS[i + 1] - tmp1_QS, warping_Q16);
             corr_QC[i] = __builtin_mips_madd(corr_QC[i], tmp1_QS, start_1);
 
@@ -91,7 +91,7 @@ void silk_warped_autocorrelation_FIX(
             state_QS[i] = tmp7_QS;
             corr_QC[i] = __builtin_mips_madd(corr_QC[i], tmp7_QS, state_QS[0]);
 
-            /* Output of allpass section */
+            /* WSPlayer of allpass section */
             tmp1_QS = silk_SMLAWB(state_QS[i + 1], state_QS[i + 2] - tmp2_QS, warping_Q16);
             corr_QC[i + 1] = __builtin_mips_madd(corr_QC[i + 1], tmp2_QS, start_1);
 
@@ -121,12 +121,12 @@ void silk_warped_autocorrelation_FIX(
         /* Loop over allpass sections */
         for (i = 0; i < order; i += 2) {
 
-            /* Output of allpass section */
+            /* WSPlayer of allpass section */
             tmp2_QS = silk_SMLAWB(state_QS[i], state_QS[i + 1] - tmp1_QS, warping_Q16);
             state_QS[i] = tmp1_QS;
             corr_QC[i] = __builtin_mips_madd(corr_QC[i], tmp1_QS, state_QS[0]);
 
-            /* Output of allpass section */
+            /* WSPlayer of allpass section */
             tmp1_QS = silk_SMLAWB(state_QS[i + 1], state_QS[i + 2] - tmp2_QS, warping_Q16);
             state_QS[i + 1] = tmp2_QS;
             corr_QC[i + 1] = __builtin_mips_madd(corr_QC[i + 1], tmp2_QS, state_QS[0]);

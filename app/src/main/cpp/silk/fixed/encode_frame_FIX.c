@@ -37,7 +37,7 @@ POSSIBILITY OF SUCH DAMAGE.
 static OPUS_INLINE void silk_LBRR_encode_FIX(
         silk_encoder_state_FIX *psEnc,                                 /* I/O  Pointer to Silk FIX encoder state                                           */
         silk_encoder_control_FIX *psEncCtrl,                             /* I/O  Pointer to Silk FIX encoder control struct                                  */
-        const opus_int32 xfw_Q3[],                               /* I    Input signal                                                                */
+        const opus_int32 xfw_Q3[],                               /* I    WSRecorder signal                                                                */
         opus_int condCoding                              /* I    The type of conditional coding used so far for this frame                   */
 );
 
@@ -101,7 +101,7 @@ opus_int silk_encode_frame_FIX(
     psEnc->sCmn.indices.Seed = psEnc->sCmn.frameCounter++ & 3;
 
     /**************************************************************/
-    /* Set up Input Pointers, and insert frame in input buffer   */
+    /* Set up WSRecorder Pointers, and insert frame in input buffer   */
     /*************************************************************/
     /* start of frame to encode */
     x_frame = psEnc->x_buf + psEnc->sCmn.ltp_mem_length;
@@ -350,7 +350,7 @@ opus_int silk_encode_frame_FIX(
 static OPUS_INLINE void silk_LBRR_encode_FIX(
         silk_encoder_state_FIX *psEnc,                                 /* I/O  Pointer to Silk FIX encoder state                                           */
         silk_encoder_control_FIX *psEncCtrl,                             /* I/O  Pointer to Silk FIX encoder control struct                                  */
-        const opus_int32 xfw_Q3[],                               /* I    Input signal                                                                */
+        const opus_int32 xfw_Q3[],                               /* I    WSRecorder signal                                                                */
         opus_int condCoding                              /* I    The type of conditional coding used so far for this frame                   */
 ) {
     opus_int32 TempGains_Q16[MAX_NB_SUBFR];

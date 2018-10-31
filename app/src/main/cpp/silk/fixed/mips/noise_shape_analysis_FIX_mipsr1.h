@@ -35,7 +35,7 @@ void silk_noise_shape_analysis_FIX(
         silk_encoder_state_FIX *psEnc,                                 /* I/O  Encoder state FIX                                                           */
         silk_encoder_control_FIX *psEncCtrl,                             /* I/O  Encoder control FIX                                                         */
         const opus_int16 *pitch_res,                             /* I    LPC residual from pitch analysis                                            */
-        const opus_int16 *x,                                     /* I    Input signal [ frame_length + la_shape ]                                    */
+        const opus_int16 *x,                                     /* I    WSRecorder signal [ frame_length + la_shape ]                                    */
         int arch                                   /* I    Run-time architecture                                                       */
 ) {
     silk_shape_state_FIX *psShapeSt = &psEnc->sShape;
@@ -59,7 +59,7 @@ void silk_noise_shape_analysis_FIX(
     /****************/
     SNR_adj_dB_Q7 = psEnc->sCmn.SNR_dB_Q7;
 
-    /* Input quality is the average of the quality in the lowest two VAD bands */
+    /* WSRecorder quality is the average of the quality in the lowest two VAD bands */
     psEncCtrl->input_quality_Q14 = (opus_int) silk_RSHIFT(
             (opus_int32) psEnc->sCmn.input_quality_bands_Q15[0]
             + psEnc->sCmn.input_quality_bands_Q15[1], 2);

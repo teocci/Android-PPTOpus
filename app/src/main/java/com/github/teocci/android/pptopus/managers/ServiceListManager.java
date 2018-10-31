@@ -127,38 +127,6 @@ public class ServiceListManager
         return serviceInfo;
     }
 
-    private String getValidIp(List<String> ipList, int port)
-    {
-        if (ipList == null) return null;
-
-        for (String ipv4 : ipList) {
-            if (!containsIPAddress(ipv4, port)) {
-                return ipv4;
-            }
-        }
-
-        return null;
-    }
-
-    public InetAddress getIPAddress(String serviceName)
-    {
-        if (isEmpty()) return null;
-        if (serviceName == null || serviceName.isEmpty()) return null;
-        if (!contains(serviceName)) return null;
-
-        ServiceInfo service = services.get(serviceName);
-        if (service == null) return null;
-
-        String address = service.getAddress();
-        if (address == null || address.isEmpty()) return null;
-        try {
-            return InetAddress.getByName(address);
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
     public boolean containsIPAddress(String ipAddress, int port)
     {
         if (isEmpty()) return false;
@@ -225,6 +193,50 @@ public class ServiceListManager
     public List<ServiceInfo> getServiceList()
     {
         return new ArrayList<>(services.values());
+    }
+
+    private String getValidIp(List<String> ipList, int port)
+    {
+        if (ipList == null) return null;
+
+        for (String ipv4 : ipList) {
+            if (!containsIPAddress(ipv4, port)) {
+                return ipv4;
+            }
+        }
+
+        return null;
+    }
+
+    public InetAddress getIPAddress(String serviceName)
+    {
+        if (isEmpty()) return null;
+        if (serviceName == null || serviceName.isEmpty()) return null;
+        if (!contains(serviceName)) return null;
+
+        ServiceInfo service = services.get(serviceName);
+        if (service == null) return null;
+
+        String address = service.getAddress();
+        if (address == null || address.isEmpty()) return null;
+        try {
+            return InetAddress.getByName(address);
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public int getPort(String serviceName)
+    {
+        if (isEmpty()) return -1;
+        if (serviceName == null || serviceName.isEmpty()) return -1;
+        if (!contains(serviceName)) return -1;
+
+        ServiceInfo service = services.get(serviceName);
+        if (service == null) return -1;
+
+        return service.getPort();
     }
 
 

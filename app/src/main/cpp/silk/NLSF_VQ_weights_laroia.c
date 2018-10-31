@@ -42,7 +42,7 @@ Signal Processing, pp. 641-644, 1991.
 void silk_NLSF_VQ_weights_laroia(
         opus_int16 *pNLSFW_Q_OUT,      /* O     Pointer to input vector weights [D]                        */
         const opus_int16 *pNLSF_Q15,         /* I     Pointer to input vector         [D]                        */
-        const opus_int D                   /* I     Input vector dimension (even)                              */
+        const opus_int D                   /* I     WSRecorder vector dimension (even)                              */
 ) {
     opus_int k;
     opus_int32 tmp1_int, tmp2_int;

@@ -33,7 +33,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 void silk_LTP_analysis_filter_FLP(
         silk_float *LTP_res,                           /* O    LTP res MAX_NB_SUBFR*(pre_lgth+subfr_lngth) */
-        const silk_float *x,                                 /* I    Input signal, with preceding samples        */
+        const silk_float *x,                                 /* I    WSRecorder signal, with preceding samples        */
         const silk_float B[LTP_ORDER *
                            MAX_NB_SUBFR],      /* I    LTP coefficients for each subframe          */
         const opus_int pitchL[MAX_NB_SUBFR],           /* I    Pitch lags                                  */

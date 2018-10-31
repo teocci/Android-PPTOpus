@@ -56,7 +56,7 @@ static inline void silk_noise_shape_quantizer_del_dec(
         opus_int32 Gain_Q16,               /* I                                        */
         opus_int Lambda_Q10,             /* I                                        */
         opus_int offset_Q10,             /* I                                        */
-        opus_int length,                 /* I    Input length                        */
+        opus_int length,                 /* I    WSRecorder length                        */
         opus_int subfr,                  /* I    Subframe number                     */
         opus_int shapingLPCOrder,        /* I    Shaping LPC filter order            */
         opus_int predictLPCOrder,        /* I    Prediction filter order             */
@@ -191,9 +191,9 @@ static inline void silk_noise_shape_quantizer_del_dec(
 
             /* Noise shape feedback */
             silk_assert((shapingLPCOrder & 1) == 0);   /* check that order is even */
-            /* Output of lowpass section */
+            /* WSPlayer of lowpass section */
             tmp2 = silk_SMLAWB(psLPC_Q14[0], psDD->sAR2_Q14[0], warping_Q16);
-            /* Output of allpass section */
+            /* WSPlayer of allpass section */
             tmp1 = silk_SMLAWB(psDD->sAR2_Q14[0], psDD->sAR2_Q14[1] - tmp2, warping_Q16);
             psDD->sAR2_Q14[0] = tmp2;
 
@@ -205,12 +205,12 @@ static inline void silk_noise_shape_quantizer_del_dec(
             for (j = 2; j < shapingLPCOrder; j += 2) {
                 cur = psDD->sAR2_Q14[j];
                 next = psDD->sAR2_Q14[j + 1];
-                /* Output of allpass section */
+                /* WSPlayer of allpass section */
                 tmp2 = silk_SMLAWB(prev, cur - tmp1, warping_Q16);
                 psDD->sAR2_Q14[j - 1] = tmp1;
                 temp64 = __builtin_mips_madd(temp64, tmp1, AR_shp_Q13[j - 1]);
                 temp64 = __builtin_mips_madd(temp64, tmp2, AR_shp_Q13[j]);
-                /* Output of allpass section */
+                /* WSPlayer of allpass section */
                 tmp1 = silk_SMLAWB(cur, next - tmp2, warping_Q16);
                 psDD->sAR2_Q14[j + 0] = tmp2;
                 prev = next;
@@ -230,7 +230,7 @@ static inline void silk_noise_shape_quantizer_del_dec(
             n_LF_Q14 = silk_LSHIFT(n_LF_Q14,
                                    2);                                      /* Q12 -> Q14 */
 
-            /* Input minus prediction plus noise feedback                       */
+            /* WSRecorder minus prediction plus noise feedback                       */
             /* r = x[ i ] - LTP_pred - LPC_pred + n_AR + n_Tilt + n_LF + n_LTP  */
             tmp1 = silk_ADD32(n_AR_Q14, n_LF_Q14);                                    /* Q14 */
             tmp2 = silk_ADD32(n_LTP_Q14, LPC_pred_Q14);                               /* Q13 */

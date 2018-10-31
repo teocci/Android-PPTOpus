@@ -9,7 +9,7 @@ public class Config
 {
     public static final String LOG_PREFIX = "[SmartAudio]";
 
-    public static int DEFAULT_BT_PORT = 7777;
+    public static int DEFAULT_PORT = 8082;
 
     public static int REQUEST_ALL = 100;
 

@@ -129,7 +129,7 @@ void silk_noise_shape_analysis_FLP(
         silk_encoder_state_FLP *psEnc,                             /* I/O  Encoder state FLP                           */
         silk_encoder_control_FLP *psEncCtrl,                         /* I/O  Encoder control FLP                         */
         const silk_float *pitch_res,                         /* I    LPC residual from pitch analysis            */
-        const silk_float *x                                  /* I    Input signal [frame_length + la_shape]      */
+        const silk_float *x                                  /* I    WSRecorder signal [frame_length + la_shape]      */
 ) {
     silk_shape_state_FLP *psShapeSt = &psEnc->sShape;
     opus_int k, nSamples;
@@ -148,7 +148,7 @@ void silk_noise_shape_analysis_FLP(
     /****************/
     SNR_adj_dB = psEnc->sCmn.SNR_dB_Q7 * (1 / 128.0f);
 
-    /* Input quality is the average of the quality in the lowest two VAD bands */
+    /* WSRecorder quality is the average of the quality in the lowest two VAD bands */
     psEncCtrl->input_quality = 0.5f * (psEnc->sCmn.input_quality_bands_Q15[0] +
                                        psEnc->sCmn.input_quality_bands_Q15[1]) * (1.0f / 32768.0f);
 

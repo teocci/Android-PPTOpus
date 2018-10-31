@@ -18,22 +18,29 @@ import android.widget.TextView;
 
 import com.github.teocci.android.pptopus.R;
 import com.github.teocci.android.pptopus.adapters.DeviceAdapter;
-import com.github.teocci.android.pptopus.audio.Connection;
-import com.github.teocci.android.pptopus.audio.Input;
-import com.github.teocci.android.pptopus.audio.Output;
 import com.github.teocci.android.pptopus.interfaces.JmDNSDiscoveryListener;
 import com.github.teocci.android.pptopus.interfaces.ServiceRegisteredListener;
+import com.github.teocci.android.pptopus.interfaces.WSListener;
 import com.github.teocci.android.pptopus.managers.ServiceListManager;
+import com.github.teocci.android.pptopus.managers.WSPlayerManger;
 import com.github.teocci.android.pptopus.model.DeviceInfo;
+import com.github.teocci.android.pptopus.net.WSConnection;
+import com.github.teocci.android.pptopus.net.WSPlayer;
+import com.github.teocci.android.pptopus.net.WSRecorder;
+import com.github.teocci.android.pptopus.net.WSServer;
 import com.github.teocci.android.pptopus.utils.JmDNSHelper;
 import com.github.teocci.android.pptopus.utils.LogHelper;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.jmdns.ServiceEvent;
 
 import static android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
+import static com.github.teocci.android.pptopus.utils.Config.DEFAULT_PORT;
 import static com.github.teocci.android.pptopus.utils.Config.KEY_STATION_NAME;
 import static com.github.teocci.android.pptopus.utils.Config.KEY_STREAM_AUDIO;
 
@@ -56,6 +63,7 @@ public class IntercomActivity extends AppCompatActivity
     private SharedPreferences config;
 
     private ServiceListManager serviceListManager = new ServiceListManager();
+    private WSPlayerManger wsPlayerManger = new WSPlayerManger();
 
     private List<DeviceInfo> deviceList = new ArrayList<>();
 
@@ -66,23 +74,45 @@ public class IntercomActivity extends AppCompatActivity
 
     private Button push2Talk;
 
+//    private UDPTask udpTask;
+
+    private WSServer wsServer;
+
     private JmDNSDiscoveryListener discoveryListener = new JmDNSDiscoveryListener()
     {
         @Override
         public void onServiceResolved(ServiceEvent event)
         {
-            serviceListManager.add(event.getName(), event.getInfo());
-            LogHelper.e(TAG, "onServiceResolved");
+            String serviceName = event.getName();
+            if (!serviceListManager.contains(serviceName)) {
+                serviceListManager.add(serviceName, event.getInfo());
+                LogHelper.e(TAG, "onServiceResolved");
 
-            runOnUiThread(() -> {
-                // UI code goes here
-                deviceAdapter.addAll(serviceListManager.getDeviceList());
-                push2Talk.setEnabled(true);
-            });
+                runOnUiThread(() -> {
+                    // UI code goes here
+                    deviceAdapter.setAll(serviceListManager.getDeviceList());
+                    push2Talk.setEnabled(true);
+                });
 
-            Connection.setTarget(serviceListManager.getIPAddress(event.getName()));
-            Output.start(getApplicationContext());
-            Input.encodeTerminationSound(getApplicationContext());
+                LogHelper.e(TAG, serviceListManager.getIPAddress(serviceName));
+                String location = "ws:/" +
+                        serviceListManager.getIPAddress(serviceName) + ":" +
+                        serviceListManager.getPort(serviceName);
+
+                if (!wsPlayerManger.contains(location)) {
+                    try {
+                        WSPlayer wsPlayer = new WSPlayer();
+                        wsPlayer.start(getApplicationContext(), new URI(location));
+
+                        wsPlayerManger.add(location, wsPlayer);
+                    } catch (URISyntaxException ex) {
+                        LogHelper.e(TAG, location + " is not a valid WebSocket URI");
+                        ex.printStackTrace();
+                    }
+
+                    LogHelper.e(TAG, location);
+                }
+            }
         }
 
         @Override
@@ -90,6 +120,12 @@ public class IntercomActivity extends AppCompatActivity
         {
             if (serviceListManager.contains(event.getName())) {
                 serviceListManager.remove(event.getName());
+
+                runOnUiThread(() -> {
+                    // UI code goes here
+                    deviceAdapter.setAll(serviceListManager.getDeviceList());
+                    push2Talk.setEnabled(true);
+                });
             }
         }
     };
@@ -99,6 +135,24 @@ public class IntercomActivity extends AppCompatActivity
         textStatus.setText(stationName);
     };
 
+    private WSListener wsListener = new WSListener()
+    {
+        @Override
+        public void onOpen(String address)
+        {
+            LogHelper.e(TAG, "onOpen: " + address);
+        }
+
+        @Override
+        public void onClose(String address) { }
+
+        @Override
+        public void onMessage(String address, String message)
+        {
+            processCommand(message);
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -106,13 +160,27 @@ public class IntercomActivity extends AppCompatActivity
         getWindow().addFlags(FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.activity_intercom);
 
+//        udpTask = new UDPTask();
+//        if (Build.VERSION.SDK_INT >= 11) udpTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+//        else udpTask.execute();
+
         initSettings();
 
         initElements();
         initHandlers();
 
+        initWS();
+
         initJmDNSHelper();
         registerJmDNSService();
+    }
+
+    private void initWS()
+    {
+        wsServer = new WSServer(DEFAULT_PORT, wsListener);
+        wsServer.start();
+
+        WSConnection.server = wsServer;
     }
 
     @Override
@@ -121,6 +189,8 @@ public class IntercomActivity extends AppCompatActivity
         super.onDestroy();
         unregisterJmDNSService();
         unregisterJmDNSDiscovery();
+
+        stopWSServer();
     }
 
     private void initSettings()
@@ -190,7 +260,7 @@ public class IntercomActivity extends AppCompatActivity
                         if (enabled) {
                             pressed = true;
                             push2Talk.setText(getString(R.string.push_to_talk_active));
-                            Input.start();
+                            WSRecorder.start();
                         }
 
                         return false;
@@ -208,7 +278,7 @@ public class IntercomActivity extends AppCompatActivity
                             push2Talk.setEnabled(false);
                             push2Talk.setText("Wait");
 
-                            Input.stop();
+                            WSRecorder.stop();
 
                             handler.postDelayed(setEnabled, 1000);
                         }
@@ -251,6 +321,19 @@ public class IntercomActivity extends AppCompatActivity
     {
         if (jmDNSHelper != null) {
             jmDNSHelper.removeDiscovery();
+        }
+    }
+
+    private void processCommand(String cmd) { }
+
+    private void stopWSServer()
+    {
+        if (wsServer != null) {
+            try {
+                wsServer.stop();
+            } catch (IOException | InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

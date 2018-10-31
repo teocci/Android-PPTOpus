@@ -296,9 +296,9 @@ OPUS_CUSTOM_EXPORT void opus_custom_decoder_destroy(OpusCustomDecoder *st);
 
 /** Decode an opus custom frame with floating point output
   * @param [in] st <tt>OpusCustomDecoder*</tt>: Decoder state
-  * @param [in] data <tt>char*</tt>: Input payload. Use a NULL pointer to indicate packet loss
+  * @param [in] data <tt>char*</tt>: WSRecorder payload. Use a NULL pointer to indicate packet loss
   * @param [in] len <tt>int</tt>: Number of bytes in payload
-  * @param [out] pcm <tt>float*</tt>: Output signal (interleaved if 2 channels). length
+  * @param [out] pcm <tt>float*</tt>: WSPlayer signal (interleaved if 2 channels). length
   *  is frame_size*channels*sizeof(float)
   * @param [in] frame_size Number of samples per channel of available space in *pcm.
   * @returns Number of decoded samples or @ref opus_errorcodes
@@ -313,9 +313,9 @@ OPUS_CUSTOM_EXPORT OPUS_WARN_UNUSED_RESULT int opus_custom_decode_float(
 
 /** Decode an opus custom frame
   * @param [in] st <tt>OpusCustomDecoder*</tt>: Decoder state
-  * @param [in] data <tt>char*</tt>: Input payload. Use a NULL pointer to indicate packet loss
+  * @param [in] data <tt>char*</tt>: WSRecorder payload. Use a NULL pointer to indicate packet loss
   * @param [in] len <tt>int</tt>: Number of bytes in payload
-  * @param [out] pcm <tt>opus_int16*</tt>: Output signal (interleaved if 2 channels). length
+  * @param [out] pcm <tt>opus_int16*</tt>: WSPlayer signal (interleaved if 2 channels). length
   *  is frame_size*channels*sizeof(opus_int16)
   * @param [in] frame_size Number of samples per channel of available space in *pcm.
   * @returns Number of decoded samples or @ref opus_errorcodes

@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.media.AudioTrack;
-import android.util.Log;
 
 import com.github.teocci.android.pptopus.audio.codecs.opus.NativeAudioException;
 import com.github.teocci.android.pptopus.audio.codecs.opus.OpusDecoder;
@@ -14,15 +13,13 @@ import com.github.teocci.android.pptopus.utils.LogHelper;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
-import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.PriorityQueue;
 
-public class Output
+public class UDPPlayer
 {
-    public static final String TAG = Output.class.getSimpleName();
+    public static final String TAG = UDPPlayer.class.getSimpleName();
 
     private static volatile boolean _die;
     public static short identCode;
@@ -36,11 +33,11 @@ public class Output
         public void onReceive(Context context, Intent intent)
         {
             if (intent.getAction().equals("android.net.conn.CONNECTIVITY_CHANGE")) {
-                if (Connection.socket != null) {
+                if (UDPConnection.socket != null) {
                     new Thread(() -> {
                         try {
-                            Connection.socket.send(new DatagramPacket(keepAlivePacket, 4, Connection.target, 8200));
-                            Connection.setSent();
+                            UDPConnection.socket.send(new DatagramPacket(keepAlivePacket, 4, UDPConnection.target, UDPConnection.port));
+                            UDPConnection.setSent();
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -60,8 +57,8 @@ public class Output
         keepAlivePacket = new byte[]{
                 (byte) 100,
                 (byte) 64,
-                (byte) ((Output.identCode >> 8) & 0xFF),
-                (byte) (Output.identCode & 0xFF)
+                (byte) ((UDPPlayer.identCode >> 8) & 0xFF),
+                (byte) (UDPPlayer.identCode & 0xFF)
         };
 
         _die = false;
@@ -80,14 +77,8 @@ public class Output
 
         /* Receiving thread */
         new Thread(() -> {
-            try {
-                Connection.socket = new DatagramSocket(8200);
-                Connection.socket.setSoTimeout(10000);
-            } catch (SocketException e) {
-                _die = true;
-            }
-
-            InetAddress target = Connection.target;
+            InetAddress target = UDPConnection.target;
+            int targetPort = UDPConnection.port;
 
             byte[] buffer = new byte[512];
             DatagramPacket packet = new DatagramPacket(buffer, 512);
@@ -101,9 +92,9 @@ public class Output
                 innerLoop:
                 while (!_die) {
                     try {
-                        if (Connection.sent < System.currentTimeMillis()) {
-                            Connection.socket.send(new DatagramPacket(keepAlivePacket, 4, target, 8200));
-                            Connection.setSent();
+                        if (UDPConnection.sent < System.currentTimeMillis()) {
+                            UDPConnection.socket.send(new DatagramPacket(keepAlivePacket, 4, target, targetPort));
+                            UDPConnection.setSent();
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -111,10 +102,9 @@ public class Output
 
                     i = 0;
                     do {
-
                         LogHelper.e(TAG, "index " + i);
                         try {
-                            Connection.socket.receive(packet);
+                            UDPConnection.socket.receive(packet);
                             totalData = packet.getData();
                             len = packet.getLength() - 64;
                             if (len > -1) {
@@ -179,7 +169,7 @@ public class Output
                             handlePack = queue.remove();
                             pcmOutLength = decoder.decodeShort(handlePack.data, handlePack.data.length, pcmOut, Configuration.FRAME_SIZE);
                             track.write(pcmOut, 0, pcmOutLength);
-                            Log.e("OHJA", Integer.toString(handlePack.ident));
+                            LogHelper.e(TAG, Integer.toString(handlePack.ident));
                             track.play();
                         } catch (NativeAudioException e) {
                             e.printStackTrace();
@@ -191,7 +181,7 @@ public class Output
                                 handlePack = queue.remove();
                                 pcmOutLength = decoder.decodeShort(handlePack.data, handlePack.data.length, pcmOut, Configuration.FRAME_SIZE);
                                 track.write(pcmOut, 0, pcmOutLength);
-                                Log.e("OHJA", Integer.toString(handlePack.ident));
+                                LogHelper.e(TAG, Integer.toString(handlePack.ident));
                             } catch (NativeAudioException e) {
                                 e.printStackTrace();
                                 _die = true;

@@ -9,6 +9,7 @@ import com.github.teocci.android.pptopus.interfaces.JmDNSDiscoveryListener;
 import com.github.teocci.android.pptopus.interfaces.JmDNSServiceListener;
 import com.github.teocci.android.pptopus.interfaces.ServiceRegisteredListener;
 import com.github.teocci.android.pptopus.net.JmDNSRegisterTask;
+import com.github.teocci.android.pptopus.net.UDPTask;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -58,6 +59,9 @@ public class JmDNSHelper implements JmDNSServiceListener
         public void serviceRemoved(ServiceEvent event)
         {
             LogHelper.e(TAG, "Service remove request: ", String.valueOf(event.getInfo()));
+            if (discoveryListener != null) {
+                discoveryListener.onServiceRemoved(event);
+            }
         }
 
         public void serviceResolved(ServiceEvent event)
@@ -66,6 +70,10 @@ public class JmDNSHelper implements JmDNSServiceListener
 //            int port = event.getInfo().getPort();
 //            InetAddress host = event.getInfo().getInetAddresses()[0];
 //            LogHelper.e(TAG, "Service resolved: (host, port) -> (" + host.getHostAddress() + ", " + port + ')');
+
+            String serviceName = event.getName();
+            if (isSameService(serviceName)) return;
+
             if (discoveryListener != null) {
                 discoveryListener.onServiceResolved(event);
             }
@@ -143,7 +151,7 @@ public class JmDNSHelper implements JmDNSServiceListener
 
 //            wifiLock();
 
-        final ServiceInfo serviceInfo = ServiceInfo.create(SERVICE_TYPE, serviceName, DEFAULT_RTSP_PORT, stationName);
+        final ServiceInfo serviceInfo = ServiceInfo.create(SERVICE_TYPE, serviceName, UDPTask.getPort(), stationName);
 
         new JmDNSRegisterTask(jmDNS, serviceInfo, this).execute();
     }
@@ -198,6 +206,11 @@ public class JmDNSHelper implements JmDNSServiceListener
 //        multicastLock.setReferenceCounted(true);
 //        multicastLock.acquire();
 //    }
+
+    public boolean isSameService(String serviceName)
+    {
+        return this.serviceName.equals(serviceName);
+    }
 
     public boolean isServiceRegistered()
     {

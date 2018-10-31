@@ -19,7 +19,7 @@
     #define JNICALL
 
     typedef int jint;
-    typedef long long jlong;
+//    typedef long long jlong;
     typedef signed char jbyte;
 #endif
 

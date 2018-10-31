@@ -65,7 +65,7 @@ static OPUS_INLINE void silk_noise_shape_quantizer_10_16_sse4_1(
         opus_int32 LF_shp_Q14,             /* I                                    */
         opus_int32 Gain_Q16,               /* I                                    */
         opus_int offset_Q10,             /* I                                    */
-        opus_int length,                 /* I    Input length                    */
+        opus_int length,                 /* I    WSRecorder length                    */
         opus_int32 table[][4]              /* I                                    */
 );
 
@@ -267,7 +267,7 @@ static OPUS_INLINE void silk_noise_shape_quantizer_10_16_sse4_1(
         opus_int32 LF_shp_Q14,             /* I                                    */
         opus_int32 Gain_Q16,               /* I                                    */
         opus_int offset_Q10,             /* I                                    */
-        opus_int length,                 /* I    Input length                    */
+        opus_int length,                 /* I    WSRecorder length                    */
         opus_int32 table[][4]              /* I                                    */
 ) {
     opus_int i;

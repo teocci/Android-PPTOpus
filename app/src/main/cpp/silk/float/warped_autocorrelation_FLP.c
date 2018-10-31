@@ -34,7 +34,7 @@ POSSIBILITY OF SUCH DAMAGE.
 /* Autocorrelations for a warped frequency axis */
 void silk_warped_autocorrelation_FLP(
         silk_float *corr,                              /* O    Result [order + 1]                          */
-        const silk_float *input,                             /* I    Input data to correlate                     */
+        const silk_float *input,                             /* I    WSRecorder data to correlate                     */
         const silk_float warping,                            /* I    Warping coefficient                         */
         const opus_int length,                             /* I    Length of input                             */
         const opus_int order                               /* I    Correlation order (even)                    */
@@ -52,11 +52,11 @@ void silk_warped_autocorrelation_FLP(
         tmp1 = input[n];
         /* Loop over allpass sections */
         for (i = 0; i < order; i += 2) {
-            /* Output of allpass section */
+            /* WSPlayer of allpass section */
             tmp2 = state[i] + warping * (state[i + 1] - tmp1);
             state[i] = tmp1;
             C[i] += state[0] * tmp1;
-            /* Output of allpass section */
+            /* WSPlayer of allpass section */
             tmp1 = state[i + 1] + warping * (state[i + 2] - tmp2);
             state[i + 1] = tmp2;
             C[i + 1] += state[0] * tmp2;

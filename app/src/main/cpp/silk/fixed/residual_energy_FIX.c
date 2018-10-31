@@ -37,7 +37,7 @@ POSSIBILITY OF SUCH DAMAGE.
 void silk_residual_energy_FIX(
         opus_int32 nrgs[MAX_NB_SUBFR],                   /* O    Residual energy per subframe                                                */
         opus_int nrgsQ[MAX_NB_SUBFR],                  /* O    Q value per subframe                                                        */
-        const opus_int16 x[],                                    /* I    Input signal                                                                */
+        const opus_int16 x[],                                    /* I    WSRecorder signal                                                                */
         opus_int16 a_Q12[2][MAX_LPC_ORDER],            /* I    AR coefs for each frame half                                                */
         const opus_int32 gains[MAX_NB_SUBFR],                  /* I    Quantization gains                                                          */
         const opus_int subfr_length,                           /* I    Subframe length                                                             */

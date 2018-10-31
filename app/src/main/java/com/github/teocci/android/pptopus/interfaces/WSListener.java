@@ -1,5 +1,4 @@
 package com.github.teocci.android.pptopus.interfaces;
-
 /**
  * Created by teocci.
  *
@@ -7,9 +6,9 @@ package com.github.teocci.android.pptopus.interfaces;
  */
 public interface WSListener
 {
-    void onOpen();
+    void onOpen(String address);
 
-    void onClose();
+    void onClose(String address);
 
-    void onMessage(String message);
+    void onMessage(String address, String message);
 }

@@ -205,7 +205,7 @@ void silk_noise_shape_quantizer(
     opus_int32          Gain_Q16,               /* I                                    */
     opus_int            Lambda_Q10,             /* I                                    */
     opus_int            offset_Q10,             /* I                                    */
-    opus_int            length,                 /* I    Input length                    */
+    opus_int            length,                 /* I    WSRecorder length                    */
     opus_int            shapingLPCOrder,        /* I    Noise shaping AR filter order   */
     opus_int            predictLPCOrder,        /* I    Prediction filter order         */
     int                 arch                    /* I    Architecture                    */
@@ -246,7 +246,7 @@ void silk_warped_LPC_analysis_filter_FIX_sse4_1(
           opus_int32            state[],                    /* I/O  State [order + 1]                   */
           opus_int32            res_Q2[],                   /* O    Residual signal [length]            */
     const opus_int16            coef_Q13[],                 /* I    Coefficients [order]                */
-    const opus_int16            input[],                    /* I    Input signal [length]               */
+    const opus_int16            input[],                    /* I    WSRecorder signal [length]               */
     const opus_int16            lambda_Q16,                 /* I    Warping factor                      */
     const opus_int              length,                     /* I    Length of input signal              */
     const opus_int              order                       /* I    Filter order (even)                 */
@@ -262,7 +262,7 @@ extern void (*const SILK_WARPED_LPC_ANALYSIS_FILTER_FIX_IMPL[OPUS_ARCHMASK + 1])
           opus_int32            state[],                    /* I/O  State [order + 1]                   */
           opus_int32            res_Q2[],                   /* O    Residual signal [length]            */
     const opus_int16            coef_Q13[],                 /* I    Coefficients [order]                */
-    const opus_int16            input[],                    /* I    Input signal [length]               */
+    const opus_int16            input[],                    /* I    WSRecorder signal [length]               */
     const opus_int16            lambda_Q16,                 /* I    Warping factor                      */
     const opus_int              length,                     /* I    Length of input signal              */
     const opus_int              order                       /* I    Filter order (even)                 */

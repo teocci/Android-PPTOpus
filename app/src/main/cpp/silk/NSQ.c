@@ -67,7 +67,7 @@ static OPUS_INLINE void silk_noise_shape_quantizer(
         opus_int32 Gain_Q16,               /* I                                    */
         opus_int Lambda_Q10,             /* I                                    */
         opus_int offset_Q10,             /* I                                    */
-        opus_int length,                 /* I    Input length                    */
+        opus_int length,                 /* I    WSRecorder length                    */
         opus_int shapingLPCOrder,        /* I    Noise shaping AR filter order   */
         opus_int predictLPCOrder,        /* I    Prediction filter order         */
         int arch                    /* I    Architecture                    */
@@ -214,7 +214,7 @@ void silk_noise_shape_quantizer(
         opus_int32 Gain_Q16,               /* I                                    */
         opus_int Lambda_Q10,             /* I                                    */
         opus_int offset_Q10,             /* I                                    */
-        opus_int length,                 /* I    Input length                    */
+        opus_int length,                 /* I    WSRecorder length                    */
         opus_int shapingLPCOrder,        /* I    Noise shaping AR filter order   */
         opus_int predictLPCOrder,        /* I    Prediction filter order         */
         int arch                    /* I    Architecture                    */

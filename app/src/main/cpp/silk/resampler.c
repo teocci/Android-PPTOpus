@@ -83,8 +83,8 @@ static const opus_int8 delay_matrix_dec[3][5] = {
 /* Initialize/reset the resampler state for a given pair of input/output sampling rates */
 opus_int silk_resampler_init(
         silk_resampler_state_struct *S,                 /* I/O  Resampler state                                             */
-        opus_int32 Fs_Hz_in,           /* I    Input sampling rate (Hz)                                    */
-        opus_int32 Fs_Hz_out,          /* I    Output sampling rate (Hz)                                   */
+        opus_int32 Fs_Hz_in,           /* I    WSRecorder sampling rate (Hz)                                    */
+        opus_int32 Fs_Hz_out,          /* I    WSPlayer sampling rate (Hz)                                   */
         opus_int forEnc              /* I    If 1: encoder; if 0: decoder                                */
 ) {
     opus_int up2x;
@@ -92,7 +92,7 @@ opus_int silk_resampler_init(
     /* Clear state */
     silk_memset(S, 0, sizeof(silk_resampler_state_struct));
 
-    /* Input checking */
+    /* WSRecorder checking */
     if (forEnc) {
         if ((Fs_Hz_in != 8000 && Fs_Hz_in != 12000 && Fs_Hz_in != 16000 && Fs_Hz_in != 24000 &&
              Fs_Hz_in != 48000) ||
@@ -169,7 +169,7 @@ opus_int silk_resampler_init(
             return -1;
         }
     } else {
-        /* Input and output sampling rates are equal: copy */
+        /* WSRecorder and output sampling rates are equal: copy */
         S->resampler_function = USE_silk_resampler_copy;
     }
 
@@ -184,11 +184,11 @@ opus_int silk_resampler_init(
 }
 
 /* Resampler: convert from one sampling rate to another */
-/* Input and output sampling rate are at most 48000 Hz  */
+/* WSRecorder and output sampling rate are at most 48000 Hz  */
 opus_int silk_resampler(
         silk_resampler_state_struct *S,                 /* I/O  Resampler state                                             */
-        opus_int16 out[],              /* O    Output signal                                               */
-        const opus_int16 in[],               /* I    Input signal                                                */
+        opus_int16 out[],              /* O    WSPlayer signal                                               */
+        const opus_int16 in[],               /* I    WSRecorder signal                                                */
         opus_int32 inLen               /* I    Number of input samples                                     */
 ) {
     opus_int nSamples;

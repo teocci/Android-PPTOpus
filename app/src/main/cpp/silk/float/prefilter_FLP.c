@@ -51,7 +51,7 @@ static void silk_warped_LPC_analysis_filter_FLP(
         silk_float state[],            /* I/O  State [order + 1]                       */
         silk_float res[],              /* O    Residual signal [length]                */
         const silk_float coef[],             /* I    Coefficients [order]                    */
-        const silk_float input[],            /* I    Input signal [length]                   */
+        const silk_float input[],            /* I    WSRecorder signal [length]                   */
         const silk_float lambda,             /* I    Warping factor                          */
         const opus_int length,             /* I    Length of input signal                  */
         const opus_int order               /* I    Filter order (even)                     */
@@ -63,20 +63,20 @@ static void silk_warped_LPC_analysis_filter_FLP(
     silk_assert((order & 1) == 0);
 
     for (n = 0; n < length; n++) {
-        /* Output of lowpass section */
+        /* WSPlayer of lowpass section */
         tmp2 = state[0] + lambda * state[1];
         state[0] = input[n];
-        /* Output of allpass section */
+        /* WSPlayer of allpass section */
         tmp1 = state[1] + lambda * (state[2] - tmp2);
         state[1] = tmp2;
         acc = coef[0] * tmp2;
         /* Loop over allpass sections */
         for (i = 2; i < order; i += 2) {
-            /* Output of allpass section */
+            /* WSPlayer of allpass section */
             tmp2 = state[i] + lambda * (state[i + 1] - tmp1);
             state[i] = tmp1;
             acc += coef[i - 1] * tmp1;
-            /* Output of allpass section */
+            /* WSPlayer of allpass section */
             tmp1 = state[i + 1] + lambda * (state[i + 2] - tmp2);
             state[i + 1] = tmp2;
             acc += coef[i] * tmp2;

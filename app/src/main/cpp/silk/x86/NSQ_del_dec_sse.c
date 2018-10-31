@@ -65,8 +65,8 @@ static OPUS_INLINE void silk_nsq_del_dec_scale_states_sse4_1(
         const silk_encoder_state *psEncC,               /* I    Encoder State                       */
         silk_nsq_state *NSQ,                       /* I/O  NSQ state                           */
         NSQ_del_dec_struct psDelDec[],                 /* I/O  Delayed decision states             */
-        const opus_int32 x_Q3[],                     /* I    Input in Q3                         */
-        opus_int32 x_sc_Q10[],                 /* O    Input scaled with 1/Gain in Q10     */
+        const opus_int32 x_Q3[],                     /* I    WSRecorder in Q3                         */
+        opus_int32 x_sc_Q10[],                 /* O    WSRecorder scaled with 1/Gain in Q10     */
         const opus_int16 sLTP[],                     /* I    Re-whitened LTP state in Q0         */
         opus_int32 sLTP_Q15[],                 /* O    LTP state matching scaled input     */
         opus_int subfr,                      /* I    Subframe number                     */
@@ -100,7 +100,7 @@ static OPUS_INLINE void silk_noise_shape_quantizer_del_dec_sse4_1(
         opus_int32 Gain_Q16,               /* I                                        */
         opus_int Lambda_Q10,             /* I                                        */
         opus_int offset_Q10,             /* I                                        */
-        opus_int length,                 /* I    Input length                        */
+        opus_int length,                 /* I    WSRecorder length                        */
         opus_int subfr,                  /* I    Subframe number                     */
         opus_int shapingLPCOrder,        /* I    Shaping LPC filter order            */
         opus_int predictLPCOrder,        /* I    Prediction filter order             */
@@ -348,7 +348,7 @@ static OPUS_INLINE void silk_noise_shape_quantizer_del_dec_sse4_1(
         opus_int32 Gain_Q16,               /* I                                        */
         opus_int Lambda_Q10,             /* I                                        */
         opus_int offset_Q10,             /* I                                        */
-        opus_int length,                 /* I    Input length                        */
+        opus_int length,                 /* I    WSRecorder length                        */
         opus_int subfr,                  /* I    Subframe number                     */
         opus_int shapingLPCOrder,        /* I    Shaping LPC filter order            */
         opus_int predictLPCOrder,        /* I    Prediction filter order             */
@@ -544,21 +544,21 @@ static OPUS_INLINE void silk_noise_shape_quantizer_del_dec_sse4_1(
 
                 /* Noise shape feedback */
                 silk_assert((shapingLPCOrder & 1) == 0);   /* check that order is even */
-                /* Output of lowpass section */
+                /* WSPlayer of lowpass section */
                 tmp2 = silk_SMLAWB(psLPC_Q14[0], psDD->sAR2_Q14[0], warping_Q16);
-                /* Output of allpass section */
+                /* WSPlayer of allpass section */
                 tmp1 = silk_SMLAWB(psDD->sAR2_Q14[0], psDD->sAR2_Q14[1] - tmp2, warping_Q16);
                 psDD->sAR2_Q14[0] = tmp2;
                 n_AR_Q14 = silk_RSHIFT(shapingLPCOrder, 1);
                 n_AR_Q14 = silk_SMLAWB(n_AR_Q14, tmp2, AR_shp_Q13[0]);
                 /* Loop over allpass sections */
                 for (j = 2; j < shapingLPCOrder; j += 2) {
-                    /* Output of allpass section */
+                    /* WSPlayer of allpass section */
                     tmp2 = silk_SMLAWB(psDD->sAR2_Q14[j - 1], psDD->sAR2_Q14[j + 0] - tmp1,
                                        warping_Q16);
                     psDD->sAR2_Q14[j - 1] = tmp1;
                     n_AR_Q14 = silk_SMLAWB(n_AR_Q14, tmp1, AR_shp_Q13[j - 1]);
-                    /* Output of allpass section */
+                    /* WSPlayer of allpass section */
                     tmp1 = silk_SMLAWB(psDD->sAR2_Q14[j + 0], psDD->sAR2_Q14[j + 1] - tmp2,
                                        warping_Q16);
                     psDD->sAR2_Q14[j + 0] = tmp2;
@@ -578,7 +578,7 @@ static OPUS_INLINE void silk_noise_shape_quantizer_del_dec_sse4_1(
                 n_LF_Q14 = silk_LSHIFT(n_LF_Q14,
                                        2);                                      /* Q12 -> Q14 */
 
-                /* Input minus prediction plus noise feedback                       */
+                /* WSRecorder minus prediction plus noise feedback                       */
                 /* r = x[ i ] - LTP_pred - LPC_pred + n_AR + n_Tilt + n_LF + n_LTP  */
                 tmp1 = silk_ADD32(n_AR_Q14, n_LF_Q14);                                    /* Q14 */
                 tmp2 = silk_ADD32(n_LTP_Q14, LPC_pred_Q14);                               /* Q13 */
@@ -774,8 +774,8 @@ static OPUS_INLINE void silk_nsq_del_dec_scale_states_sse4_1(
         const silk_encoder_state *psEncC,               /* I    Encoder State                       */
         silk_nsq_state *NSQ,                       /* I/O  NSQ state                           */
         NSQ_del_dec_struct psDelDec[],                 /* I/O  Delayed decision states             */
-        const opus_int32 x_Q3[],                     /* I    Input in Q3                         */
-        opus_int32 x_sc_Q10[],                 /* O    Input scaled with 1/Gain in Q10     */
+        const opus_int32 x_Q3[],                     /* I    WSRecorder in Q3                         */
+        opus_int32 x_sc_Q10[],                 /* O    WSRecorder scaled with 1/Gain in Q10     */
         const opus_int16 sLTP[],                     /* I    Re-whitened LTP state in Q0         */
         opus_int32 sLTP_Q15[],                 /* O    LTP state matching scaled input     */
         opus_int subfr,                      /* I    Subframe number                     */

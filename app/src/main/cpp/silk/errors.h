@@ -42,7 +42,7 @@ extern "C"
 /* Encoder error messages */
 /**************************/
 
-/* Input length is not a multiple of 10 ms, or length is longer than the packet length */
+/* WSRecorder length is not a multiple of 10 ms, or length is longer than the packet length */
 #define SILK_ENC_INPUT_INVALID_NO_OF_SAMPLES        -101
 
 /* Sampling frequency not 8000, 12000 or 16000 Hertz */
@@ -79,7 +79,7 @@ extern "C"
 /* Decoder error messages */
 /**************************/
 
-/* Output sampling frequency lower than internal decoded sampling frequency */
+/* WSPlayer sampling frequency lower than internal decoded sampling frequency */
 #define SILK_DEC_INVALID_SAMPLING_FREQUENCY         -200
 
 /* Payload size exceeded the maximum allowed 1024 bytes */

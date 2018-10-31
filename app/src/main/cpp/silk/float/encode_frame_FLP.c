@@ -36,7 +36,7 @@ POSSIBILITY OF SUCH DAMAGE.
 static OPUS_INLINE void silk_LBRR_encode_FLP(
         silk_encoder_state_FLP *psEnc,                             /* I/O  Encoder state FLP                           */
         silk_encoder_control_FLP *psEncCtrl,                         /* I/O  Encoder control FLP                         */
-        const silk_float xfw[],                              /* I    Input signal                                */
+        const silk_float xfw[],                              /* I    WSRecorder signal                                */
         opus_int condCoding                          /* I    The type of conditional coding used so far for this frame */
 );
 
@@ -103,7 +103,7 @@ opus_int silk_encode_frame_FLP(
     psEnc->sCmn.indices.Seed = psEnc->sCmn.frameCounter++ & 3;
 
     /**************************************************************/
-    /* Set up Input Pointers, and insert frame in input buffer    */
+    /* Set up WSRecorder Pointers, and insert frame in input buffer    */
     /**************************************************************/
     /* pointers aligned with start of frame to encode */
     x_frame = psEnc->x_buf + psEnc->sCmn.ltp_mem_length;    /* start of frame to encode */
@@ -334,7 +334,7 @@ opus_int silk_encode_frame_FLP(
 static OPUS_INLINE void silk_LBRR_encode_FLP(
         silk_encoder_state_FLP *psEnc,                             /* I/O  Encoder state FLP                           */
         silk_encoder_control_FLP *psEncCtrl,                         /* I/O  Encoder control FLP                         */
-        const silk_float xfw[],                              /* I    Input signal                                */
+        const silk_float xfw[],                              /* I    WSRecorder signal                                */
         opus_int condCoding                          /* I    The type of conditional coding used so far for this frame */
 ) {
     opus_int k;

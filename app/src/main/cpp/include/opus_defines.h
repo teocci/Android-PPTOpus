@@ -537,13 +537,13 @@ extern "C" {
   * set here and the value 16.
   *
   * @see OPUS_GET_LSB_DEPTH
-  * @param[in] x <tt>opus_int32</tt>: Input precision in bits, between 8 and 24
+  * @param[in] x <tt>opus_int32</tt>: WSRecorder precision in bits, between 8 and 24
   *                                   (default: 24).
   * @hideinitializer */
 #define OPUS_SET_LSB_DEPTH(x) OPUS_SET_LSB_DEPTH_REQUEST, __opus_check_int(x)
 /** Gets the encoder's configured signal depth.
   * @see OPUS_SET_LSB_DEPTH
-  * @param[out] x <tt>opus_int32 *</tt>: Input precision in bits, between 8 and
+  * @param[out] x <tt>opus_int32 *</tt>: WSRecorder precision in bits, between 8 and
   *                                      24 (default: 24).
   * @hideinitializer */
 #define OPUS_GET_LSB_DEPTH(x) OPUS_GET_LSB_DEPTH_REQUEST, __opus_check_int_ptr(x)

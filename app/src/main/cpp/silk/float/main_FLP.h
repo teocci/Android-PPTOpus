@@ -103,13 +103,13 @@ void silk_noise_shape_analysis_FLP(
         silk_encoder_state_FLP *psEnc,                             /* I/O  Encoder state FLP                           */
         silk_encoder_control_FLP *psEncCtrl,                         /* I/O  Encoder control FLP                         */
         const silk_float *pitch_res,                         /* I    LPC residual from pitch analysis            */
-        const silk_float *x                                  /* I    Input signal [frame_length + la_shape]      */
+        const silk_float *x                                  /* I    WSRecorder signal [frame_length + la_shape]      */
 );
 
 /* Autocorrelations for a warped frequency axis */
 void silk_warped_autocorrelation_FLP(
         silk_float *corr,                              /* O    Result [order + 1]                          */
-        const silk_float *input,                             /* I    Input data to correlate                     */
+        const silk_float *input,                             /* I    WSRecorder data to correlate                     */
         const silk_float warping,                            /* I    Warping coefficient                         */
         const opus_int length,                             /* I    Length of input                             */
         const opus_int order                               /* I    Correlation order (even)                    */
@@ -147,7 +147,7 @@ void silk_find_pred_coefs_FLP(
 void silk_find_LPC_FLP(
         silk_encoder_state *psEncC,                            /* I/O  Encoder state                               */
         opus_int16 NLSF_Q15[],                         /* O    NLSFs                                       */
-        const silk_float x[],                                /* I    Input signal                                */
+        const silk_float x[],                                /* I    WSRecorder signal                                */
         const silk_float minInvGain                          /* I    Prediction gain from LTP (dB)               */
 );
 
@@ -168,7 +168,7 @@ void silk_find_LTP_FLP(
 
 void silk_LTP_analysis_filter_FLP(
         silk_float *LTP_res,                           /* O    LTP res MAX_NB_SUBFR*(pre_lgth+subfr_lngth) */
-        const silk_float *x,                                 /* I    Input signal, with preceding samples        */
+        const silk_float *x,                                 /* I    WSRecorder signal, with preceding samples        */
         const silk_float B[LTP_ORDER *
                            MAX_NB_SUBFR],      /* I    LTP coefficients for each subframe          */
         const opus_int pitchL[MAX_NB_SUBFR],           /* I    Pitch lags                                  */
@@ -182,7 +182,7 @@ void silk_LTP_analysis_filter_FLP(
 /* of preceding samples                                                                 */
 void silk_residual_energy_FLP(
         silk_float nrgs[MAX_NB_SUBFR],               /* O    Residual energy per subframe                */
-        const silk_float x[],                                /* I    Input signal                                */
+        const silk_float x[],                                /* I    WSRecorder signal                                */
         silk_float a[2][MAX_LPC_ORDER],            /* I    AR coefs for each frame half                */
         const silk_float gains[],                            /* I    Quantization gains                          */
         const opus_int subfr_length,                       /* I    Subframe length                             */
@@ -194,7 +194,7 @@ void silk_residual_energy_FLP(
 void silk_LPC_analysis_filter_FLP(
         silk_float r_LPC[],                            /* O    LPC residual signal                         */
         const silk_float PredCoef[],                         /* I    LPC coefficients                            */
-        const silk_float s[],                                /* I    Input signal                                */
+        const silk_float s[],                                /* I    WSRecorder signal                                */
         const opus_int length,                             /* I    Length of input signal                      */
         const opus_int Order                               /* I    LPC order                                   */
 );

@@ -7,7 +7,6 @@ import android.media.MediaRecorder;
 import com.github.teocci.android.pptopus.R;
 import com.github.teocci.android.pptopus.audio.codecs.opus.NativeAudioException;
 import com.github.teocci.android.pptopus.audio.codecs.opus.OpusEncoder;
-import com.github.teocci.android.pptopus.ui.MainActivity;
 import com.github.teocci.android.pptopus.utils.LogHelper;
 
 import java.io.ByteArrayOutputStream;
@@ -17,9 +16,10 @@ import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.util.ArrayList;
 
-public class Input
+public class UDPRecorder
+
 {
-    public static final String TAG = Input.class.getSimpleName();
+    public static final String TAG = UDPRecorder.class.getSimpleName();
 
     private static volatile boolean _die;
     private static ArrayList<byte[]> terminationSound = new ArrayList<>();
@@ -117,7 +117,8 @@ public class Input
                 @Override
                 public void run()
                 {
-                    InetAddress target = Connection.target;
+                    InetAddress target = UDPConnection.target;
+                    int port = UDPConnection.port;
                     if (encoder == null) {
                         try {
                             encoder = new OpusEncoder(
@@ -132,54 +133,54 @@ public class Input
                         }
                     }
 
-                    short[] pcm_audio_shorts = new short[bufferSize];
-                    short[] pcm_frame_shorts = new short[Configuration.FRAME_SIZE];
+                    short[] pcmAudioShorts = new short[bufferSize];
+                    short[] pcmFrameShorts = new short[Configuration.FRAME_SIZE];
 
-                    byte[] opus_audio_bytes;
-                    int opus_audio_bytes_encoded;
+                    byte[] opusAudioBytes;
+                    int opusAudioBytesEncoded;
 
                     int i;
 
                     int noOnce = 0;
 
-                    int bytes_read;
-                    int byte_queue;
-                    int bytes_sent;
+                    int bytesRead;
+                    int byteQueue;
+                    int bytesSent;
 
                     while (!_die) {
                         /* Fill audio buffer */
-                        bytes_read = audioRecord.read(pcm_audio_shorts, 0, bufferSize);
+                        bytesRead = audioRecord.read(pcmAudioShorts, 0, bufferSize);
 
-                        for (i = 0; i < bytes_read / Configuration.FRAME_SIZE; i++) {
-                            System.arraycopy(pcm_audio_shorts, i * Configuration.FRAME_SIZE, pcm_frame_shorts, 0, Configuration.FRAME_SIZE);
+                        for (i = 0; i < bytesRead / Configuration.FRAME_SIZE; i++) {
+                            System.arraycopy(pcmAudioShorts, i * Configuration.FRAME_SIZE, pcmFrameShorts, 0, Configuration.FRAME_SIZE);
                             try {
-                                if ((opus_audio_bytes_encoded = encoder.encode(pcm_frame_shorts, Configuration.FRAME_SIZE)) > 0) {
-                                    opus_audio_bytes = encoder.getEncodedData();
+                                if ((opusAudioBytesEncoded = encoder.encode(pcmFrameShorts, Configuration.FRAME_SIZE)) > 0) {
+                                    opusAudioBytes = encoder.getEncodedData();
                                     /* Send audio buffer */
                                     try {
-                                        bytes_sent = 0;
-                                        while ((byte_queue = Math.min(444, opus_audio_bytes_encoded - bytes_sent)) > 0) {
-                                            byte[] data = new byte[byte_queue + 64];
+                                        bytesSent = 0;
+                                        while ((byteQueue = Math.min(444, opusAudioBytesEncoded - bytesSent)) > 0) {
+                                            byte[] data = new byte[byteQueue + 64];
 
                                             data[0] = (byte) noOnce;
                                             noOnce = noOnce + 1 % 256;
 
-                                            data[2] = (byte) ((Output.identCode >> 8) & 0xFF);
-                                            data[3] = (byte) (Output.identCode & 0xFF);
+                                            data[2] = (byte) ((UDPPlayer.identCode >> 8) & 0xFF);
+                                            data[3] = (byte) (UDPPlayer.identCode & 0xFF);
 
-                                            System.arraycopy(opus_audio_bytes, bytes_sent, data, 64, byte_queue);
+                                            System.arraycopy(opusAudioBytes, bytesSent, data, 64, byteQueue);
 
-                                            Connection.socket.send(new DatagramPacket(data, 0, data.length, target, 8200));
+                                            UDPConnection.socket.send(new DatagramPacket(data, 0, data.length, target, port));
 
                                             LogHelper.e(TAG, "Sending: " + Integer.toString(data.length) + " bytes");
 
-                                            bytes_sent += byte_queue;
+                                            bytesSent += byteQueue;
                                         }
 
                                     } catch (IOException e) {
                                         _die = true;
                                     }
-                                    Connection.setSent();
+                                    UDPConnection.setSent();
                                 }
                             } catch (NativeAudioException e) {
                                 e.printStackTrace();
@@ -188,36 +189,36 @@ public class Input
                     }
 
                     /* Send *Over* */
-                    for (i = 0; i < terminationSound.size(); i++) {
-                        opus_audio_bytes = terminationSound.get(i);
-                        opus_audio_bytes_encoded = opus_audio_bytes.length;
+//                    for (i = 0; i < terminationSound.size(); i++) {
+//                        opus_audio_bytes = terminationSound.get(i);
+//                        opus_audio_bytes_encoded = opus_audio_bytes.length;
+//
+//                        /* Send *terminationSound* buffer */
+//                        try {
+//                            bytes_sent = 0;
+//                            while ((byte_queue = Math.min(444, opus_audio_bytes_encoded - bytes_sent)) > 0) {
+//                                byte[] data = new byte[byte_queue + 64];
+//
+//                                data[0] = (byte) noOnce;
+//                                noOnce = noOnce + 1 % 256;
+//
+//                                data[2] = (byte) ((WSPlayer.identCode >> 8) & 0xFF);
+//                                data[3] = (byte) (WSPlayer.identCode & 0xFF);
+//
+//                                System.arraycopy(opus_audio_bytes, bytes_sent, data, 64, byte_queue);
+//
+//                                UDPConnection.server.send(new DatagramPacket(data, 0, data.length, target, port));
+//
+//                                LogHelper.e(TAG, "Sending (Over sound): " + Integer.toString(data.length) + " bytes");
+//
+//                                bytes_sent += byte_queue;
+//                            }
+//                        } catch (IOException e) {
+//                            _die = true;
+//                        }
+//                    }
 
-                        /* Send *terminationSound* buffer */
-                        try {
-                            bytes_sent = 0;
-                            while ((byte_queue = Math.min(444, opus_audio_bytes_encoded - bytes_sent)) > 0) {
-                                byte[] data = new byte[byte_queue + 64];
-
-                                data[0] = (byte) noOnce;
-                                noOnce = noOnce + 1 % 256;
-
-                                data[2] = (byte) ((Output.identCode >> 8) & 0xFF);
-                                data[3] = (byte) (Output.identCode & 0xFF);
-
-                                System.arraycopy(opus_audio_bytes, bytes_sent, data, 64, byte_queue);
-
-                                Connection.socket.send(new DatagramPacket(data, 0, data.length, target, 8200));
-
-                                LogHelper.e(TAG, "Sending (Over sound): " + Integer.toString(data.length) + " bytes");
-
-                                bytes_sent += byte_queue;
-                            }
-                        } catch (IOException e) {
-                            _die = true;
-                        }
-                    }
-
-                    Connection.setSent();
+//                    UDPConnection.setSent();
 
                     //encoder.destroy();
 

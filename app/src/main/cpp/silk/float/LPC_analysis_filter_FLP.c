@@ -43,7 +43,7 @@ POSSIBILITY OF SUCH DAMAGE.
 static OPUS_INLINE void silk_LPC_analysis_filter16_FLP(
         silk_float r_LPC[],            /* O    LPC residual signal                     */
         const silk_float PredCoef[],         /* I    LPC coefficients                        */
-        const silk_float s[],                /* I    Input signal                            */
+        const silk_float s[],                /* I    WSRecorder signal                            */
         const opus_int length              /* I    Length of input signal                  */
 ) {
     opus_int ix;
@@ -80,7 +80,7 @@ static OPUS_INLINE void silk_LPC_analysis_filter16_FLP(
 static OPUS_INLINE void silk_LPC_analysis_filter12_FLP(
         silk_float r_LPC[],            /* O    LPC residual signal                     */
         const silk_float PredCoef[],         /* I    LPC coefficients                        */
-        const silk_float s[],                /* I    Input signal                            */
+        const silk_float s[],                /* I    WSRecorder signal                            */
         const opus_int length              /* I    Length of input signal                  */
 ) {
     opus_int ix;
@@ -113,7 +113,7 @@ static OPUS_INLINE void silk_LPC_analysis_filter12_FLP(
 static OPUS_INLINE void silk_LPC_analysis_filter10_FLP(
         silk_float r_LPC[],            /* O    LPC residual signal                     */
         const silk_float PredCoef[],         /* I    LPC coefficients                        */
-        const silk_float s[],                /* I    Input signal                            */
+        const silk_float s[],                /* I    WSRecorder signal                            */
         const opus_int length              /* I    Length of input signal                  */
 ) {
     opus_int ix;
@@ -144,7 +144,7 @@ static OPUS_INLINE void silk_LPC_analysis_filter10_FLP(
 static OPUS_INLINE void silk_LPC_analysis_filter8_FLP(
         silk_float r_LPC[],            /* O    LPC residual signal                     */
         const silk_float PredCoef[],         /* I    LPC coefficients                        */
-        const silk_float s[],                /* I    Input signal                            */
+        const silk_float s[],                /* I    WSRecorder signal                            */
         const opus_int length              /* I    Length of input signal                  */
 ) {
     opus_int ix;
@@ -173,7 +173,7 @@ static OPUS_INLINE void silk_LPC_analysis_filter8_FLP(
 static OPUS_INLINE void silk_LPC_analysis_filter6_FLP(
         silk_float r_LPC[],            /* O    LPC residual signal                     */
         const silk_float PredCoef[],         /* I    LPC coefficients                        */
-        const silk_float s[],                /* I    Input signal                            */
+        const silk_float s[],                /* I    WSRecorder signal                            */
         const opus_int length              /* I    Length of input signal                  */
 ) {
     opus_int ix;
@@ -205,7 +205,7 @@ static OPUS_INLINE void silk_LPC_analysis_filter6_FLP(
 void silk_LPC_analysis_filter_FLP(
         silk_float r_LPC[],                            /* O    LPC residual signal                         */
         const silk_float PredCoef[],                         /* I    LPC coefficients                            */
-        const silk_float s[],                                /* I    Input signal                                */
+        const silk_float s[],                                /* I    WSRecorder signal                                */
         const opus_int length,                             /* I    Length of input signal                      */
         const opus_int Order                               /* I    LPC order                                   */
 ) {

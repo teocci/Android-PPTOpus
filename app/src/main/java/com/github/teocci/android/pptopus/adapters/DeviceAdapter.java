@@ -87,7 +87,7 @@ public class DeviceAdapter extends RecyclerView.Adapter<DeviceItemHolder>
      * RecyclerView method, notifyItemInserted(), to trigger any enabled item
      * animations in addition to updating the view.
      */
-    public void addAll(List<DeviceInfo> stations)
+    public void setAll(List<DeviceInfo> stations)
     {
         items.clear();
         items.addAll(stations);
