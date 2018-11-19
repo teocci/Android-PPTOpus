@@ -122,7 +122,7 @@ typedef struct {
     /* I:   Number of channels; 1/2                                                         */
     opus_int32 nChannelsInternal;
 
-    /* I:   WSPlayer signal sampling rate in Hertz; 8000/12000/16000/24000/32000/44100/48000  */
+    /* I:   WSAudioPlayer signal sampling rate in Hertz; 8000/12000/16000/24000/32000/44100/48000  */
     opus_int32 API_sampleRate;
 
     /* I:   Internal sampling rate used, in Hertz; 8000/12000/16000                         */

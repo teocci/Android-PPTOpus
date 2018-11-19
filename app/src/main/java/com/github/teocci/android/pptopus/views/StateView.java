@@ -20,7 +20,12 @@ public class StateView extends View
         super(context, attrs);
 
         final TypedArray a = context.obtainStyledAttributes(
-                attrs, new int[]{android.R.attr.minHeight}, android.R.attr.buttonStyle, 0);
+                attrs,
+                new int[]{android.R.attr.minHeight},
+                android.R.attr.buttonStyle,
+                0
+        );
+
         if (a != null) {
             final int minHeight = a.getDimensionPixelSize(0, -1);
             if (minHeight != -1)

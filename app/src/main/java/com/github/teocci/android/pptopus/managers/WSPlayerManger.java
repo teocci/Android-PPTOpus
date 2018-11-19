@@ -1,7 +1,8 @@
 package com.github.teocci.android.pptopus.managers;
 
+import com.github.teocci.android.pptopus.model.DeviceInfo;
+import com.github.teocci.android.pptopus.net.WSAudioPlayer;
 import com.github.teocci.android.pptopus.net.WSClient;
-import com.github.teocci.android.pptopus.net.WSPlayer;
 import com.github.teocci.android.pptopus.utils.LogHelper;
 
 import java.util.ArrayList;
@@ -18,31 +19,31 @@ public class WSPlayerManger
 {
     private static final String TAG = LogHelper.makeLogTag(WSPlayerManger.class);
 
-    private Map<String, WSPlayer> wsPlayers = new ConcurrentHashMap<>();
+    private Map<String, WSAudioPlayer> wsPlayers = new ConcurrentHashMap<>();
 
-    public boolean add(String location, WSPlayer wsPlayer)
+    public boolean add(String address, WSAudioPlayer wsAudioPlayer)
     {
-        if (contains(location)) return false;
+        if (contains(address)) return false;
 
-        wsPlayers.put(location, wsPlayer);
+        wsPlayers.put(address, wsAudioPlayer);
 
         LogHelper.w(TAG, "[add]");
         return true;
     }
 
-    public boolean remove(String location)
+    public boolean remove(String address)
     {
-        if (!contains(location)) return false;
+        if (!contains(address)) return false;
 
-        wsPlayers.remove(location);
+        wsPlayers.remove(address);
 
         LogHelper.w(TAG, "[remove && close]");
         return true;
     }
 
-    public boolean contains(String location)
+    public boolean contains(String address)
     {
-        return !isEmpty() && wsPlayers.containsKey(location);
+        return !isEmpty() && wsPlayers.containsKey(address);
     }
 
     public List<WSClient> getAllClients()
@@ -50,11 +51,11 @@ public class WSPlayerManger
         List<WSClient> serviceInfos = new ArrayList<>();
         if (isEmpty()) return serviceInfos;
 
-        for (Map.Entry<String, WSPlayer> e : wsPlayers.entrySet()) {
+        for (Map.Entry<String, WSAudioPlayer> e : wsPlayers.entrySet()) {
 //            String serviceName = e.getKey();
-            WSPlayer wsPlayer = e.getValue();
-            if (wsPlayer != null) {
-                serviceInfos.add(wsPlayer.getWSClient());
+            WSAudioPlayer wsAudioPlayer = e.getValue();
+            if (wsAudioPlayer != null) {
+                serviceInfos.add(wsAudioPlayer.getWSClient());
             }
         }
 
@@ -64,31 +65,45 @@ public class WSPlayerManger
     public void stopAll()
     {
         if (!isEmpty()) {
-            for (WSPlayer connection : wsPlayers.values()) {
+            for (WSAudioPlayer connection : wsPlayers.values()) {
                 connection.stop();
             }
         }
     }
 
-    public WSPlayer get(String location)
+    public WSAudioPlayer get(String address)
     {
-        return contains(location) ? wsPlayers.get(location) : null;
+        return contains(address) ? wsPlayers.get(address) : null;
     }
 
-    public WSPlayer[] getAll()
+    public WSAudioPlayer[] getAll()
     {
         return (wsPlayers != null && !wsPlayers.isEmpty()) ?
-                wsPlayers.values().toArray(new WSPlayer[wsPlayers.size()]) :
-                new WSPlayer[0];
+                wsPlayers.values().toArray(new WSAudioPlayer[0]) : new WSAudioPlayer[0];
+    }
+
+    public List<DeviceInfo> getDeviceList()
+    {
+        List<DeviceInfo> devices = new ArrayList<>();
+        if (!isEmpty()) {
+            for (WSAudioPlayer wsAudioPlayer : wsPlayers.values()) {
+                DeviceInfo station = new DeviceInfo(wsAudioPlayer.getDeviceName(), wsAudioPlayer.getAddress(), 0, 0);
+                devices.add(station);
+            }
+
+            return devices;
+        }
+
+        return devices;
     }
 
     public boolean isPlaying(String location)
     {
         if (!contains(location)) return false;
 
-        WSPlayer wsPlayer = get(location);
+        WSAudioPlayer wsAudioPlayer = get(location);
         // Check Streaming SocketManager and Controller SocketManager
-        return wsPlayer != null && !wsPlayer.isPlaying();
+        return wsAudioPlayer != null && !wsAudioPlayer.isPlaying();
     }
 
     public boolean isEmpty()

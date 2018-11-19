@@ -360,7 +360,7 @@ OPUS_EXPORT int opus_multistream_surround_encoder_init(
   *                                 Passing in a duration of less than 10 ms
   *                                 (480 samples at 48 kHz) will prevent the
   *                                 encoder from using the LPC or hybrid modes.
-  * @param[out] data <tt>unsigned char*</tt>: WSPlayer payload.
+  * @param[out] data <tt>unsigned char*</tt>: WSAudioPlayer payload.
   *                                           This must contain storage for at
   *                                           least \a max_data_bytes.
   * @param [in] max_data_bytes <tt>opus_int32</tt>: Size of the allocated
@@ -405,7 +405,7 @@ OPUS_EXPORT OPUS_WARN_UNUSED_RESULT int opus_multistream_encode(
   *                                 Passing in a duration of less than 10 ms
   *                                 (480 samples at 48 kHz) will prevent the
   *                                 encoder from using the LPC or hybrid modes.
-  * @param[out] data <tt>unsigned char*</tt>: WSPlayer payload.
+  * @param[out] data <tt>unsigned char*</tt>: WSAudioPlayer payload.
   *                                           This must contain storage for at
   *                                           least \a max_data_bytes.
   * @param [in] max_data_bytes <tt>opus_int32</tt>: Size of the allocated
@@ -561,7 +561,7 @@ OPUS_EXPORT int opus_multistream_decoder_init(
   *                                                pointer to indicate packet
   *                                                loss.
   * @param len <tt>opus_int32</tt>: Number of bytes in payload.
-  * @param[out] pcm <tt>opus_int16*</tt>: WSPlayer signal, with interleaved
+  * @param[out] pcm <tt>opus_int16*</tt>: WSAudioPlayer signal, with interleaved
   *                                       samples.
   *                                       This must contain room for
   *                                       <code>frame_size*channels</code>
@@ -599,7 +599,7 @@ OPUS_EXPORT OPUS_WARN_UNUSED_RESULT int opus_multistream_decode(
   *                                                pointer to indicate packet
   *                                                loss.
   * @param len <tt>opus_int32</tt>: Number of bytes in payload.
-  * @param[out] pcm <tt>opus_int16*</tt>: WSPlayer signal, with interleaved
+  * @param[out] pcm <tt>opus_int16*</tt>: WSAudioPlayer signal, with interleaved
   *                                       samples.
   *                                       This must contain room for
   *                                       <code>frame_size*channels</code>

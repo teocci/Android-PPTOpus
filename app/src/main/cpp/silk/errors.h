@@ -79,7 +79,7 @@ extern "C"
 /* Decoder error messages */
 /**************************/
 
-/* WSPlayer sampling frequency lower than internal decoded sampling frequency */
+/* WSAudioPlayer sampling frequency lower than internal decoded sampling frequency */
 #define SILK_DEC_INVALID_SAMPLING_FREQUENCY         -200
 
 /* Payload size exceeded the maximum allowed 1024 bytes */

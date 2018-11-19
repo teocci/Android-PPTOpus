@@ -5,9 +5,9 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.util.Base64;
 
-import com.github.teocci.android.pptopus.interfaces.JmDNSDiscoveryListener;
-import com.github.teocci.android.pptopus.interfaces.JmDNSServiceListener;
-import com.github.teocci.android.pptopus.interfaces.ServiceRegisteredListener;
+import com.github.teocci.android.pptopus.interfaces.jmdns.JmDNSDiscoveryListener;
+import com.github.teocci.android.pptopus.interfaces.jmdns.JmDNSServiceListener;
+import com.github.teocci.android.pptopus.interfaces.jmdns.ServiceRegisteredListener;
 import com.github.teocci.android.pptopus.net.JmDNSRegisterTask;
 import com.github.teocci.android.pptopus.net.UDPTask;
 
@@ -19,7 +19,6 @@ import javax.jmdns.ServiceEvent;
 import javax.jmdns.ServiceInfo;
 import javax.jmdns.ServiceListener;
 
-import static com.github.teocci.android.pptopus.utils.Config.DEFAULT_RTSP_PORT;
 import static com.github.teocci.android.pptopus.utils.Config.SERVICE_APP_NAME;
 import static com.github.teocci.android.pptopus.utils.Config.SERVICE_CHANNEL_NAME;
 import static com.github.teocci.android.pptopus.utils.Config.SERVICE_NAME_SEPARATOR;
@@ -187,6 +186,15 @@ public class JmDNSHelper implements JmDNSServiceListener
     private void clearServiceRegistered()
     {
         serviceRegistered = false;
+    }
+
+    public static String getServiceName(String name)
+    {
+        String[] serviceName = name.split(SERVICE_NAME_SEPARATOR);
+
+        if (serviceName.length != 4) return null;
+
+        return serviceName[0] + ":" + serviceName[1] + ":" + serviceName[2];
     }
 
 

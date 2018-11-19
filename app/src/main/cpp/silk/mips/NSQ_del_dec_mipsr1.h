@@ -191,9 +191,9 @@ static inline void silk_noise_shape_quantizer_del_dec(
 
             /* Noise shape feedback */
             silk_assert((shapingLPCOrder & 1) == 0);   /* check that order is even */
-            /* WSPlayer of lowpass section */
+            /* WSAudioPlayer of lowpass section */
             tmp2 = silk_SMLAWB(psLPC_Q14[0], psDD->sAR2_Q14[0], warping_Q16);
-            /* WSPlayer of allpass section */
+            /* WSAudioPlayer of allpass section */
             tmp1 = silk_SMLAWB(psDD->sAR2_Q14[0], psDD->sAR2_Q14[1] - tmp2, warping_Q16);
             psDD->sAR2_Q14[0] = tmp2;
 
@@ -205,12 +205,12 @@ static inline void silk_noise_shape_quantizer_del_dec(
             for (j = 2; j < shapingLPCOrder; j += 2) {
                 cur = psDD->sAR2_Q14[j];
                 next = psDD->sAR2_Q14[j + 1];
-                /* WSPlayer of allpass section */
+                /* WSAudioPlayer of allpass section */
                 tmp2 = silk_SMLAWB(prev, cur - tmp1, warping_Q16);
                 psDD->sAR2_Q14[j - 1] = tmp1;
                 temp64 = __builtin_mips_madd(temp64, tmp1, AR_shp_Q13[j - 1]);
                 temp64 = __builtin_mips_madd(temp64, tmp2, AR_shp_Q13[j]);
-                /* WSPlayer of allpass section */
+                /* WSAudioPlayer of allpass section */
                 tmp1 = silk_SMLAWB(cur, next - tmp2, warping_Q16);
                 psDD->sAR2_Q14[j + 0] = tmp2;
                 prev = next;

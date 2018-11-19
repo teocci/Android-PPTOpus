@@ -84,7 +84,7 @@ static const opus_int8 delay_matrix_dec[3][5] = {
 opus_int silk_resampler_init(
         silk_resampler_state_struct *S,                 /* I/O  Resampler state                                             */
         opus_int32 Fs_Hz_in,           /* I    WSRecorder sampling rate (Hz)                                    */
-        opus_int32 Fs_Hz_out,          /* I    WSPlayer sampling rate (Hz)                                   */
+        opus_int32 Fs_Hz_out,          /* I    WSAudioPlayer sampling rate (Hz)                                   */
         opus_int forEnc              /* I    If 1: encoder; if 0: decoder                                */
 ) {
     opus_int up2x;
@@ -187,7 +187,7 @@ opus_int silk_resampler_init(
 /* WSRecorder and output sampling rate are at most 48000 Hz  */
 opus_int silk_resampler(
         silk_resampler_state_struct *S,                 /* I/O  Resampler state                                             */
-        opus_int16 out[],              /* O    WSPlayer signal                                               */
+        opus_int16 out[],              /* O    WSAudioPlayer signal                                               */
         const opus_int16 in[],               /* I    WSRecorder signal                                                */
         opus_int32 inLen               /* I    Number of input samples                                     */
 ) {

@@ -390,7 +390,7 @@ opus_int silk_pitch_analysis_core_FLP(      /* O    Voicing estimate: 0 voiced, 
         return 1;
     }
 
-    /* WSPlayer normalized correlation */
+    /* WSAudioPlayer normalized correlation */
     *LTPCorr = (silk_float)(CCmax / nb_subfr);
     silk_assert(*LTPCorr >= 0.0f);
 

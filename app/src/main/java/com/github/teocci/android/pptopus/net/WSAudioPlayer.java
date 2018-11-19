@@ -12,19 +12,27 @@ import com.github.teocci.android.pptopus.audio.AudioPacketComparator;
 import com.github.teocci.android.pptopus.audio.Configuration;
 import com.github.teocci.android.pptopus.audio.codecs.opus.NativeAudioException;
 import com.github.teocci.android.pptopus.audio.codecs.opus.OpusDecoder;
-import com.github.teocci.android.pptopus.interfaces.WSClientListener;
+import com.github.teocci.android.pptopus.interfaces.ws.WSClientListener;
+import com.github.teocci.android.pptopus.interfaces.ws.WSPlayerListener;
+import com.github.teocci.android.pptopus.model.ServiceInfo;
 import com.github.teocci.android.pptopus.utils.LogHelper;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.concurrent.PriorityBlockingQueue;
 
-public class WSPlayer
+public class WSAudioPlayer
 {
-    public final String TAG = WSPlayer.class.getSimpleName();
+    public final String TAG = WSAudioPlayer.class.getSimpleName();
 
-    private volatile boolean _die;
+    private volatile boolean die;
 
+    private ServiceInfo serviceInfo;
     private WSClient wsClient;
+
+    private URI uri;
+
+    private WSPlayerListener wsPlayerListener;
 
     private int i = 0;
     private int len;
@@ -80,12 +88,17 @@ public class WSPlayer
                 System.arraycopy(totalData, 64, data, 0, len);
 
                 LogHelper.e(TAG, "Receiving: " + Integer.toString(data.length) + " bytes");
+                if (wsPlayerListener != null) {
+                    wsPlayerListener.onStatusChanged(serviceInfo.getAddress(), 1);
+                }
+
                 queue.add(new AudioPacket(totalData[0] & 0xff, ((totalData[2] & 0xFF) << 8 | totalData[3] & 0xFF), data));
 
                 if (i == queueSize) synchronized (lock) {
                     lock.notify();
                 }
             }
+
             if (i++ > 500) i = 0;
         }
 
@@ -93,10 +106,32 @@ public class WSPlayer
         public void onClose()
         {
             stop();
+
+            if (wsPlayerListener != null) {
+                wsPlayerListener.onStop(getAddress());
+            }
         }
     };
 
-    public void start(Context context, URI uri)
+    public WSAudioPlayer(ServiceInfo serviceInfo, WSPlayerListener wsPlayerListener)
+    {
+        if (serviceInfo == null) return;
+        if (wsPlayerListener == null) return;
+
+        this.serviceInfo = serviceInfo;
+        this.wsPlayerListener = wsPlayerListener;
+
+        String location = "ws://" + serviceInfo.getAddress() + ":" + serviceInfo.getPort();
+
+        try {
+            uri = new URI(location);
+        } catch (URISyntaxException ex) {
+            LogHelper.e(TAG, location + " is not a valid WebSocket URI");
+            ex.printStackTrace();
+        }
+    }
+
+    public void start(Context context)
     {
         wsClient = new WSClient(uri, clientListener);
         wsClient.connect();
@@ -105,7 +140,7 @@ public class WSPlayer
 
         WSConnection.setIdent((short) (Math.random() * 65535));
 
-        _die = false;
+        die = false;
 
         final int bufferSize = AudioTrack.getMinBufferSize(
                 Configuration.AUDIO_SAMPLE_RATE,
@@ -132,7 +167,7 @@ public class WSPlayer
                 short[] pcmOut = new short[Configuration.FRAME_SIZE];
                 int pcmOutLength;
 
-                while (!_die) {
+                while (!die) {
                     try {
                         synchronized (lock) {
                             lock.wait(200);
@@ -151,10 +186,10 @@ public class WSPlayer
                             track.play();
                         } catch (NativeAudioException e) {
                             e.printStackTrace();
-                            _die = true;
+                            die = true;
                         }
 
-                        if (!_die) do {
+                        if (!die) do {
                             try {
                                 LogHelper.e(TAG, "decoding G: (queue.size , queueSize) -> (" + queue.size() + ", " + queueSize + ')');
                                 handlePack = queue.remove();
@@ -163,7 +198,7 @@ public class WSPlayer
                                 LogHelper.e(TAG, Integer.toString(handlePack.ident));
                             } catch (NativeAudioException e) {
                                 e.printStackTrace();
-                                _die = true;
+                                die = true;
                                 break;
                             }
                         } while (!queue.isEmpty());
@@ -171,6 +206,10 @@ public class WSPlayer
                         track.write(new short[bufferSize], 0, bufferSize);
                         track.stop();
                         track.flush();
+
+                        if (wsPlayerListener != null) {
+                            wsPlayerListener.onStatusChanged(serviceInfo.getAddress(), 0);
+                        }
                     }
                 }
 
@@ -181,20 +220,47 @@ public class WSPlayer
                 decoder.destroy();
             } catch (NativeAudioException e) {
                 e.printStackTrace();
-                _die = true;
+                die = true;
             }
         }).start();
     }
 
     public void stop()
     {
-        _die = true;
+        die = true;
     }
+
+    public void setServiceInfo(ServiceInfo serviceInfo)
+    {
+        this.serviceInfo = serviceInfo;
+    }
+
 
     public WSClient getWSClient()
     {
         return wsClient;
     }
+
+    public ServiceInfo getServiceInfo()
+    {
+        return serviceInfo;
+    }
+
+    public String getDeviceName()
+    {
+        return serviceInfo == null ? null : serviceInfo.getDeviceName();
+    }
+
+    public String getAddress()
+    {
+        return serviceInfo == null ? null : serviceInfo.getAddress();
+    }
+
+    public String getServiceName()
+    {
+        return serviceInfo == null ? null : serviceInfo.getServiceName();
+    }
+
 
     public boolean isPlaying()
     {
@@ -203,6 +269,6 @@ public class WSPlayer
 
     public boolean hasStopped()
     {
-        return _die;
+        return die;
     }
 }

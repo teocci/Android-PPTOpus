@@ -1,6 +1,6 @@
 package com.github.teocci.android.pptopus.net;
 
-import com.github.teocci.android.pptopus.interfaces.WSListener;
+import com.github.teocci.android.pptopus.interfaces.ws.WSServerListener;
 import com.github.teocci.android.pptopus.utils.LogHelper;
 
 import org.java_websocket.WebSocket;
@@ -26,20 +26,20 @@ public class WSServer extends WebSocketServer
     private Map<String, WebSocket> clients = new ConcurrentHashMap<>();
     private volatile String currentClient;
 
-    private WSListener wsListener;
+    private WSServerListener wsServerListener;
 
-    public WSServer(int port, WSListener wsListener)
+    public WSServer(int port, WSServerListener wsServerListener)
     {
         super(new InetSocketAddress(port));
-        this.wsListener = wsListener;
+        this.wsServerListener = wsServerListener;
         setReuseAddr(true);
         setTcpNoDelay(true);
     }
 
-    public WSServer(InetSocketAddress address, WSListener wsListener)
+    public WSServer(InetSocketAddress address, WSServerListener wsServerListener)
     {
         super(address);
-        this.wsListener = wsListener;
+        this.wsServerListener = wsServerListener;
         setReuseAddr(true);
         setTcpNoDelay(true);
     }
@@ -56,9 +56,9 @@ public class WSServer extends WebSocketServer
         conn.send(uniqueID);
 
         LogHelper.e(TAG, "Client: " + conn.getRemoteSocketAddress().getAddress().getHostAddress());
-        if (wsListener != null) {
+        if (wsServerListener != null) {
             String address = conn.getRemoteSocketAddress().getAddress().getHostAddress();
-            wsListener.onOpen(address);
+            wsServerListener.onOpen(address);
         }
     }
 
@@ -66,27 +66,27 @@ public class WSServer extends WebSocketServer
     public void onClose(WebSocket conn, int code, String reason, boolean remote)
     {
         LogHelper.e(TAG, "Client has been disconnected");
-        if (wsListener != null) {
+        if (wsServerListener != null) {
             String address = conn.getRemoteSocketAddress().getAddress().getHostAddress();
-            wsListener.onClose(address);
+            wsServerListener.onClose(address);
         }
     }
 
     @Override
     public void onMessage(WebSocket conn, String message)
     {
-        if (wsListener != null) {
+        if (wsServerListener != null) {
             String address = conn.getRemoteSocketAddress().getAddress().getHostAddress();
-            wsListener.onMessage(address, message);
+            wsServerListener.onMessage(address, message);
         }
     }
 
     @Override
     public void onMessage(WebSocket conn, ByteBuffer message)
     {
-        if (wsListener != null) {
+        if (wsServerListener != null) {
             String address = conn.getRemoteSocketAddress().getAddress().getHostAddress();
-            wsListener.onMessage(address, new String(message.array(), Charset.forName("UTF-8")));
+            wsServerListener.onMessage(address, new String(message.array(), Charset.forName("UTF-8")));
         }
     }
 

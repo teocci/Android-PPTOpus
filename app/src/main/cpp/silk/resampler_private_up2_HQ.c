@@ -37,7 +37,7 @@ POSSIBILITY OF SUCH DAMAGE.
 /* notch filter just above Nyquist.                                         */
 void silk_resampler_private_up2_HQ(
         opus_int32 *S,             /* I/O  Resampler state [ 6 ]       */
-        opus_int16 *out,           /* O    WSPlayer signal [ 2 * len ]   */
+        opus_int16 *out,           /* O    WSAudioPlayer signal [ 2 * len ]   */
         const opus_int16 *in,            /* I    WSRecorder signal [ len ]        */
         opus_int32 len             /* I    Number of input samples     */
 ) {
@@ -102,7 +102,7 @@ void silk_resampler_private_up2_HQ(
 
 void silk_resampler_private_up2_HQ_wrapper(
         void *SS,            /* I/O  Resampler state (unused)    */
-        opus_int16 *out,           /* O    WSPlayer signal [ 2 * len ]   */
+        opus_int16 *out,           /* O    WSAudioPlayer signal [ 2 * len ]   */
         const opus_int16 *in,            /* I    WSRecorder signal [ len ]        */
         opus_int32 len             /* I    Number of input samples     */
 ) {

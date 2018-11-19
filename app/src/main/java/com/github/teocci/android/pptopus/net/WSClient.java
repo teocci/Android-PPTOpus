@@ -1,6 +1,6 @@
 package com.github.teocci.android.pptopus.net;
 
-import com.github.teocci.android.pptopus.interfaces.WSClientListener;
+import com.github.teocci.android.pptopus.interfaces.ws.WSClientListener;
 import com.github.teocci.android.pptopus.utils.LogHelper;
 
 import org.java_websocket.client.WebSocketClient;
@@ -31,11 +31,12 @@ public class WSClient extends WebSocketClient
     public void onOpen(ServerHandshake handshake)
     {
         handshake.getHttpStatus();
-        LogHelper.e(TAG, "You are connected to ChatClient: " + getURI());
+        LogHelper.e(TAG, "Connected to Server: " + getURI());
     }
 
     @Override
-    public void onMessage( ByteBuffer buffer ) {
+    public void onMessage(ByteBuffer buffer)
+    {
         if (buffer.hasArray()) {
             byte[] data = new byte[buffer.remaining()];
             buffer.get(data);
@@ -52,7 +53,7 @@ public class WSClient extends WebSocketClient
     @Override
     public void onClose(int code, String reason, boolean remote)
     {
-        LogHelper.e(TAG, "You have been disconnected from: " + getURI() + "; Code: " + code + " " + reason);
+        LogHelper.e(TAG, "Disconnected from: " + getURI() + "; Code: " + code + " " + reason);
         callback.onClose();
     }
 

@@ -202,8 +202,8 @@ public class UDPRecorder
 //                                data[0] = (byte) noOnce;
 //                                noOnce = noOnce + 1 % 256;
 //
-//                                data[2] = (byte) ((WSPlayer.identCode >> 8) & 0xFF);
-//                                data[3] = (byte) (WSPlayer.identCode & 0xFF);
+//                                data[2] = (byte) ((WSAudioPlayer.identCode >> 8) & 0xFF);
+//                                data[3] = (byte) (WSAudioPlayer.identCode & 0xFF);
 //
 //                                System.arraycopy(opus_audio_bytes, bytes_sent, data, 64, byte_queue);
 //

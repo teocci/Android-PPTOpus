@@ -437,21 +437,21 @@ static OPUS_INLINE void silk_noise_shape_quantizer_del_dec(
 
             /* Noise shape feedback */
             silk_assert((shapingLPCOrder & 1) == 0);   /* check that order is even */
-            /* WSPlayer of lowpass section */
+            /* WSAudioPlayer of lowpass section */
             tmp2 = silk_SMLAWB(psLPC_Q14[0], psDD->sAR2_Q14[0], warping_Q16);
-            /* WSPlayer of allpass section */
+            /* WSAudioPlayer of allpass section */
             tmp1 = silk_SMLAWB(psDD->sAR2_Q14[0], psDD->sAR2_Q14[1] - tmp2, warping_Q16);
             psDD->sAR2_Q14[0] = tmp2;
             n_AR_Q14 = silk_RSHIFT(shapingLPCOrder, 1);
             n_AR_Q14 = silk_SMLAWB(n_AR_Q14, tmp2, AR_shp_Q13[0]);
             /* Loop over allpass sections */
             for (j = 2; j < shapingLPCOrder; j += 2) {
-                /* WSPlayer of allpass section */
+                /* WSAudioPlayer of allpass section */
                 tmp2 = silk_SMLAWB(psDD->sAR2_Q14[j - 1], psDD->sAR2_Q14[j + 0] - tmp1,
                                    warping_Q16);
                 psDD->sAR2_Q14[j - 1] = tmp1;
                 n_AR_Q14 = silk_SMLAWB(n_AR_Q14, tmp1, AR_shp_Q13[j - 1]);
-                /* WSPlayer of allpass section */
+                /* WSAudioPlayer of allpass section */
                 tmp1 = silk_SMLAWB(psDD->sAR2_Q14[j + 0], psDD->sAR2_Q14[j + 1] - tmp2,
                                    warping_Q16);
                 psDD->sAR2_Q14[j + 0] = tmp2;

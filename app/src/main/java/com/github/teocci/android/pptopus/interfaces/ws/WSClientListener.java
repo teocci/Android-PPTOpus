@@ -1,4 +1,4 @@
-package com.github.teocci.android.pptopus.interfaces;
+package com.github.teocci.android.pptopus.interfaces.ws;
 
 /**
  * Created by teocci.

@@ -1,10 +1,10 @@
-package com.github.teocci.android.pptopus.interfaces;
+package com.github.teocci.android.pptopus.interfaces.ws;
 /**
  * Created by teocci.
  *
  * @author teocci@yandex.com on 2018-Aug-20
  */
-public interface WSListener
+public interface WSServerListener
 {
     void onOpen(String address);
 

@@ -78,7 +78,7 @@ void silk_sum_sqr_shift(
         shft += 2;
     }
 
-    /* WSPlayer arguments */
+    /* WSAudioPlayer arguments */
     *shift = shft;
     *energy = nrg;
 }

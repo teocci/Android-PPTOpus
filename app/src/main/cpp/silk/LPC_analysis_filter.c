@@ -40,7 +40,7 @@ POSSIBILITY OF SUCH DAMAGE.
 /*******************************************/
 
 void silk_LPC_analysis_filter(
-        opus_int16 *out,               /* O    WSPlayer signal                                               */
+        opus_int16 *out,               /* O    WSAudioPlayer signal                                               */
         const opus_int16 *in,                /* I    WSRecorder signal                                                */
         const opus_int16 *B,                 /* I    MA prediction coefficients, Q12 [order]                     */
         const opus_int32 len,                /* I    Signal length                                               */

@@ -35,7 +35,7 @@ POSSIBILITY OF SUCH DAMAGE.
 /* - Moves NLSFs away from borders if they are too close    */
 /* - High effort to achieve a modification with minimum     */
 /*     Euclidean distance to input vector                   */
-/* - WSPlayer are sorted NLSF coefficients                    */
+/* - WSAudioPlayer are sorted NLSF coefficients                    */
 /*                                                          */
 
 #include "SigProc_FIX.h"

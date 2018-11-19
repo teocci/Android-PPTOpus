@@ -64,11 +64,11 @@ void silk_warped_autocorrelation_FIX(
         tmp1_QS = silk_LSHIFT32((opus_int32) input[n], QS);
         /* Loop over allpass sections */
         for (i = 0; i < order; i += 2) {
-            /* WSPlayer of allpass section */
+            /* WSAudioPlayer of allpass section */
             tmp2_QS = silk_SMLAWB(state_QS[i], state_QS[i + 1] - tmp1_QS, warping_Q16);
             state_QS[i] = tmp1_QS;
             corr_QC[i] += silk_RSHIFT64(silk_SMULL(tmp1_QS, state_QS[0]), 2 * QS - QC);
-            /* WSPlayer of allpass section */
+            /* WSAudioPlayer of allpass section */
             tmp1_QS = silk_SMLAWB(state_QS[i + 1], state_QS[i + 2] - tmp2_QS, warping_Q16);
             state_QS[i + 1] = tmp2_QS;
             corr_QC[i + 1] += silk_RSHIFT64(silk_SMULL(tmp2_QS, state_QS[0]), 2 * QS - QC);

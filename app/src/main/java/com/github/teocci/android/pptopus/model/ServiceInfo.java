@@ -10,6 +10,7 @@ import android.net.nsd.NsdServiceInfo;
 public class ServiceInfo
 {
     private NsdServiceInfo nsdServiceInfo;
+
     private String deviceName;
     private String serviceName;
 

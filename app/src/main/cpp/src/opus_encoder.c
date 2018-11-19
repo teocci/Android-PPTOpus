@@ -281,7 +281,7 @@ static void silk_biquad_float(
     const opus_int32      *B_Q28,         /* I:    MA coefficients [3]            */
     const opus_int32      *A_Q28,         /* I:    AR coefficients [2]            */
     opus_val32            *S,             /* I/O:  State vector [2]               */
-    opus_val16            *out,           /* O:    WSPlayer signal                  */
+    opus_val16            *out,           /* O:    WSAudioPlayer signal                  */
     const opus_int32      len,            /* I:    Signal length (must be even)   */
     int stride
 )

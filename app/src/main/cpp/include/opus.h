@@ -246,7 +246,7 @@ OPUS_EXPORT int opus_encoder_init(
   *                                      10 ms (480 samples at 48 kHz) will
   *                                      prevent the encoder from using the LPC
   *                                      or hybrid modes.
-  * @param [out] data <tt>unsigned char*</tt>: WSPlayer payload.
+  * @param [out] data <tt>unsigned char*</tt>: WSAudioPlayer payload.
   *                                            This must contain storage for at
   *                                            least \a max_data_bytes.
   * @param [in] max_data_bytes <tt>opus_int32</tt>: Size of the allocated
@@ -287,7 +287,7 @@ OPUS_EXPORT OPUS_WARN_UNUSED_RESULT opus_int32 opus_encode(
   *                                      10 ms (480 samples at 48 kHz) will
   *                                      prevent the encoder from using the LPC
   *                                      or hybrid modes.
-  * @param [out] data <tt>unsigned char*</tt>: WSPlayer payload.
+  * @param [out] data <tt>unsigned char*</tt>: WSAudioPlayer payload.
   *                                            This must contain storage for at
   *                                            least \a max_data_bytes.
   * @param [in] max_data_bytes <tt>opus_int32</tt>: Size of the allocated
@@ -447,7 +447,7 @@ OPUS_EXPORT int opus_decoder_init(
   * @param [in] st <tt>OpusDecoder*</tt>: Decoder state
   * @param [in] data <tt>char*</tt>: WSRecorder payload. Use a NULL pointer to indicate packet loss
   * @param [in] len <tt>opus_int32</tt>: Number of bytes in payload*
-  * @param [out] pcm <tt>opus_int16*</tt>: WSPlayer signal (interleaved if 2 channels). length
+  * @param [out] pcm <tt>opus_int16*</tt>: WSAudioPlayer signal (interleaved if 2 channels). length
   *  is frame_size*channels*sizeof(opus_int16)
   * @param [in] frame_size Number of samples per channel of available space in \a pcm.
   *  If this is less than the maximum packet duration (120ms; 5760 for 48kHz), this function will
@@ -472,7 +472,7 @@ OPUS_EXPORT OPUS_WARN_UNUSED_RESULT int opus_decode(
   * @param [in] st <tt>OpusDecoder*</tt>: Decoder state
   * @param [in] data <tt>char*</tt>: WSRecorder payload. Use a NULL pointer to indicate packet loss
   * @param [in] len <tt>opus_int32</tt>: Number of bytes in payload
-  * @param [out] pcm <tt>float*</tt>: WSPlayer signal (interleaved if 2 channels). length
+  * @param [out] pcm <tt>float*</tt>: WSAudioPlayer signal (interleaved if 2 channels). length
   *  is frame_size*channels*sizeof(float)
   * @param [in] frame_size Number of samples per channel of available space in \a pcm.
   *  If this is less than the maximum packet duration (120ms; 5760 for 48kHz), this function will
@@ -745,7 +745,7 @@ OPUS_EXPORT void opus_pcm_soft_clip(float *pcm, int frame_size, int channels, fl
   *   prev_toc = data[nb_packets][0];
   *   nb_packets++;
   * }
-  * // WSPlayer the final, partial packet.
+  * // WSAudioPlayer the final, partial packet.
   * if (nb_packets > 0)
   * {
   *   out_len = opus_repacketizer_out(rp, out, sizeof(out));

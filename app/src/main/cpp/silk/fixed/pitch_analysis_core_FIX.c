@@ -479,7 +479,7 @@ opus_int silk_pitch_analysis_core(                  /* O    Voicing estimate: 0 
         return 1;
     }
 
-    /* WSPlayer normalized correlation */
+    /* WSAudioPlayer normalized correlation */
     *LTPCorr_Q15 = (opus_int) silk_LSHIFT(silk_DIV32_16(CCmax, nb_subfr), 2);
     silk_assert(*LTPCorr_Q15 >= 0);
 

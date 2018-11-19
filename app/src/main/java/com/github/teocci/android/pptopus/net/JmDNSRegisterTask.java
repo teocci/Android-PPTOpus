@@ -2,7 +2,7 @@ package com.github.teocci.android.pptopus.net;
 
 import android.os.AsyncTask;
 
-import com.github.teocci.android.pptopus.interfaces.JmDNSServiceListener;
+import com.github.teocci.android.pptopus.interfaces.jmdns.JmDNSServiceListener;
 
 import java.io.IOException;
 

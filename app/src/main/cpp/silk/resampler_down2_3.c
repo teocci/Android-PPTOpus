@@ -38,7 +38,7 @@ POSSIBILITY OF SUCH DAMAGE.
 /* Downsample by a factor 2/3, low quality */
 void silk_resampler_down2_3(
         opus_int32 *S,                 /* I/O  State vector [ 6 ]                                          */
-        opus_int16 *out,               /* O    WSPlayer signal [ floor(2*inLen/3) ]                          */
+        opus_int16 *out,               /* O    WSAudioPlayer signal [ floor(2*inLen/3) ]                          */
         const opus_int16 *in,                /* I    WSRecorder signal [ inLen ]                                      */
         opus_int32 inLen               /* I    Number of input samples                                     */
 ) {

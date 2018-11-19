@@ -9,8 +9,8 @@ public class DeviceInfo
 {
     public final String name;
     public final String address;
-    public final int transmission;
-    public final long ping;
+    public int transmission;
+    public long ping;
 
     public DeviceInfo(String name, String address, int transmission, long ping)
     {

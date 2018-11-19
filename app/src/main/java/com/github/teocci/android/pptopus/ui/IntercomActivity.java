@@ -18,22 +18,22 @@ import android.widget.TextView;
 
 import com.github.teocci.android.pptopus.R;
 import com.github.teocci.android.pptopus.adapters.DeviceAdapter;
-import com.github.teocci.android.pptopus.interfaces.JmDNSDiscoveryListener;
-import com.github.teocci.android.pptopus.interfaces.ServiceRegisteredListener;
-import com.github.teocci.android.pptopus.interfaces.WSListener;
+import com.github.teocci.android.pptopus.interfaces.jmdns.JmDNSDiscoveryListener;
+import com.github.teocci.android.pptopus.interfaces.jmdns.ServiceRegisteredListener;
+import com.github.teocci.android.pptopus.interfaces.ws.WSPlayerListener;
+import com.github.teocci.android.pptopus.interfaces.ws.WSServerListener;
 import com.github.teocci.android.pptopus.managers.ServiceListManager;
 import com.github.teocci.android.pptopus.managers.WSPlayerManger;
 import com.github.teocci.android.pptopus.model.DeviceInfo;
+import com.github.teocci.android.pptopus.model.ServiceInfo;
+import com.github.teocci.android.pptopus.net.WSAudioPlayer;
 import com.github.teocci.android.pptopus.net.WSConnection;
-import com.github.teocci.android.pptopus.net.WSPlayer;
 import com.github.teocci.android.pptopus.net.WSRecorder;
 import com.github.teocci.android.pptopus.net.WSServer;
 import com.github.teocci.android.pptopus.utils.JmDNSHelper;
 import com.github.teocci.android.pptopus.utils.LogHelper;
 
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -83,34 +83,29 @@ public class IntercomActivity extends AppCompatActivity
         @Override
         public void onServiceResolved(ServiceEvent event)
         {
-            String serviceName = event.getName();
+            String serviceName = JmDNSHelper.getServiceName(event.getName());
             if (!serviceListManager.contains(serviceName)) {
-                serviceListManager.add(serviceName, event.getInfo());
-                LogHelper.e(TAG, "onServiceResolved");
+                if (serviceListManager.add(serviceName, event.getInfo())) {
+                    LogHelper.e(TAG, "onServiceResolved");
 
-                runOnUiThread(() -> {
-                    // UI code goes here
-                    deviceAdapter.setAll(serviceListManager.getDeviceList());
-                    push2Talk.setEnabled(true);
-                });
+                    ServiceInfo serviceInfo = serviceListManager.getServiceInfo(serviceName);
+                    String address = serviceInfo.getAddress();
 
-                LogHelper.e(TAG, serviceListManager.getIPAddress(serviceName));
-                String location = "ws:/" +
-                        serviceListManager.getIPAddress(serviceName) + ":" +
-                        serviceListManager.getPort(serviceName);
+                    LogHelper.e(TAG, address);
 
-                if (!wsPlayerManger.contains(location)) {
-                    try {
-                        WSPlayer wsPlayer = new WSPlayer();
-                        wsPlayer.start(getApplicationContext(), new URI(location));
+                    if (!wsPlayerManger.contains(address)) {
+                        WSAudioPlayer wsAudioPlayer = new WSAudioPlayer(serviceInfo, wsPlayerListener);
+                        wsAudioPlayer.start(getApplicationContext());
 
-                        wsPlayerManger.add(location, wsPlayer);
-                    } catch (URISyntaxException ex) {
-                        LogHelper.e(TAG, location + " is not a valid WebSocket URI");
-                        ex.printStackTrace();
+                        if (wsPlayerManger.add(address, wsAudioPlayer)) {
+                            runOnUiThread(() -> {
+                                // UI code goes here
+                                deviceAdapter.setAll(serviceListManager.getDeviceList());
+                                push2Talk.setEnabled(true);
+                            });
+
+                        }
                     }
-
-                    LogHelper.e(TAG, location);
                 }
             }
         }
@@ -118,15 +113,7 @@ public class IntercomActivity extends AppCompatActivity
         @Override
         public void onServiceRemoved(ServiceEvent event)
         {
-            if (serviceListManager.contains(event.getName())) {
-                serviceListManager.remove(event.getName());
-
-                runOnUiThread(() -> {
-                    // UI code goes here
-                    deviceAdapter.setAll(serviceListManager.getDeviceList());
-                    push2Talk.setEnabled(true);
-                });
-            }
+            removeService(event.getName());
         }
     };
 
@@ -135,7 +122,7 @@ public class IntercomActivity extends AppCompatActivity
         textStatus.setText(stationName);
     };
 
-    private WSListener wsListener = new WSListener()
+    private WSServerListener wsServerListener = new WSServerListener()
     {
         @Override
         public void onOpen(String address)
@@ -150,6 +137,46 @@ public class IntercomActivity extends AppCompatActivity
         public void onMessage(String address, String message)
         {
             processCommand(message);
+        }
+    };
+
+    private WSPlayerListener wsPlayerListener = new WSPlayerListener()
+    {
+        @Override
+        public void onStop(String address)
+        {
+            if (wsPlayerManger.contains(address)) {
+                WSAudioPlayer wsAudioPlayer = wsPlayerManger.get(address);
+                removeService(wsAudioPlayer.getServiceName());
+                if (wsPlayerManger.remove(address)) {
+                    runOnUiThread(() -> {
+                        // UI code goes here
+                        deviceAdapter.setAll(serviceListManager.getDeviceList());
+                        if (deviceAdapter.getItemCount() < 1) {
+                            push2Talk.setEnabled(false);
+                        }
+                    });
+                }
+            }
+        }
+
+        @Override
+        public void onStatusChanged(String address, int status)
+        {
+            List<DeviceInfo> deviceInfoList = serviceListManager.getDeviceList();
+            int index = 0;
+            for (DeviceInfo deviceInfo : deviceInfoList) {
+                if (deviceInfo.address.equals(address)) {
+                    deviceInfo.transmission = status;
+                    deviceInfoList.set(index, deviceInfo);
+                    break;
+                }
+                index++;
+            }
+
+            runOnUiThread(() -> {
+                deviceAdapter.setAll(deviceInfoList);
+            });
         }
     };
 
@@ -177,7 +204,7 @@ public class IntercomActivity extends AppCompatActivity
 
     private void initWS()
     {
-        wsServer = new WSServer(DEFAULT_PORT, wsListener);
+        wsServer = new WSServer(DEFAULT_PORT, wsServerListener);
         wsServer.start();
 
         WSConnection.server = wsServer;
@@ -225,10 +252,12 @@ public class IntercomActivity extends AppCompatActivity
         recyclerView.setLayoutManager(layoutManager);
 
         recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
-        recyclerView.getItemAnimator().setAddDuration(500);
-        recyclerView.getItemAnimator().setChangeDuration(500);
-        recyclerView.getItemAnimator().setMoveDuration(500);
-        recyclerView.getItemAnimator().setRemoveDuration(500);
+        if (recyclerView.getItemAnimator() != null) {
+            recyclerView.getItemAnimator().setAddDuration(500);
+            recyclerView.getItemAnimator().setChangeDuration(500);
+            recyclerView.getItemAnimator().setMoveDuration(500);
+            recyclerView.getItemAnimator().setRemoveDuration(500);
+        }
 
         recyclerView.setAdapter(deviceAdapter);
 
@@ -334,6 +363,13 @@ public class IntercomActivity extends AppCompatActivity
             } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    private void removeService(String serviceName)
+    {
+        if (serviceListManager.contains(serviceName)) {
+            serviceListManager.remove(serviceName);
         }
     }
 }

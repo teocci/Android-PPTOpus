@@ -57,7 +57,7 @@ extern "C"
 opus_int silk_resampler_init(
         silk_resampler_state_struct *S,                 /* I/O  Resampler state                                             */
         opus_int32 Fs_Hz_in,           /* I    WSRecorder sampling rate (Hz)                                    */
-        opus_int32 Fs_Hz_out,          /* I    WSPlayer sampling rate (Hz)                                   */
+        opus_int32 Fs_Hz_out,          /* I    WSAudioPlayer sampling rate (Hz)                                   */
         opus_int forEnc              /* I    If 1: encoder; if 0: decoder                                */
 );
 
@@ -66,7 +66,7 @@ opus_int silk_resampler_init(
  */
 opus_int silk_resampler(
         silk_resampler_state_struct *S,                 /* I/O  Resampler state                                             */
-        opus_int16 out[],              /* O    WSPlayer signal                                               */
+        opus_int16 out[],              /* O    WSAudioPlayer signal                                               */
         const opus_int16 in[],               /* I    WSRecorder signal                                                */
         opus_int32 inLen               /* I    Number of input samples                                     */
 );
@@ -76,7 +76,7 @@ opus_int silk_resampler(
 */
 void silk_resampler_down2(
         opus_int32 *S,                 /* I/O  State vector [ 2 ]                                          */
-        opus_int16 *out,               /* O    WSPlayer signal [ len ]                                       */
+        opus_int16 *out,               /* O    WSAudioPlayer signal [ len ]                                       */
         const opus_int16 *in,                /* I    WSRecorder signal [ floor(len/2) ]                               */
         opus_int32 inLen               /* I    Number of input samples                                     */
 );
@@ -86,7 +86,7 @@ void silk_resampler_down2(
 */
 void silk_resampler_down2_3(
         opus_int32 *S,                 /* I/O  State vector [ 6 ]                                          */
-        opus_int16 *out,               /* O    WSPlayer signal [ floor(2*inLen/3) ]                          */
+        opus_int16 *out,               /* O    WSAudioPlayer signal [ floor(2*inLen/3) ]                          */
         const opus_int16 *in,                /* I    WSRecorder signal [ inLen ]                                      */
         opus_int32 inLen               /* I    Number of input samples                                     */
 );
@@ -108,7 +108,7 @@ void silk_biquad_alt(
 
 /* Variable order MA prediction error filter. */
 void silk_LPC_analysis_filter(
-        opus_int16 *out,               /* O    WSPlayer signal                                               */
+        opus_int16 *out,               /* O    WSAudioPlayer signal                                               */
         const opus_int16 *in,                /* I    WSRecorder signal                                                */
         const opus_int16 *B,                 /* I    MA prediction coefficients, Q12 [order]                     */
         const opus_int32 len,                /* I    Signal length                                               */
@@ -367,7 +367,7 @@ opus_int64 silk_inner_prod16_aligned_64_c(
 /********************************************************************/
 
 /* Rotate a32 right by 'rot' bits. Negative rot values result in rotating
-   left. WSPlayer is 32bit int.
+   left. WSAudioPlayer is 32bit int.
    Note: contemporary compilers recognize the C expression below and
    compile it into a 'ror' instruction if available. No need for OPUS_INLINE ASM! */
 static OPUS_INLINE opus_int32 silk_ROR32(opus_int32 a32, opus_int rot) {

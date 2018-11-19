@@ -35,7 +35,7 @@ POSSIBILITY OF SUCH DAMAGE.
 /* Second order AR filter with single delay elements */
 void silk_resampler_private_AR2(
         opus_int32 S[],            /* I/O  State vector [ 2 ]          */
-        opus_int32 out_Q8[],       /* O    WSPlayer signal               */
+        opus_int32 out_Q8[],       /* O    WSAudioPlayer signal               */
         const opus_int16 in[],           /* I    WSRecorder signal                */
         const opus_int16 A_Q14[],        /* I    AR coefficients, Q14        */
         opus_int32 len             /* I    Signal length               */
